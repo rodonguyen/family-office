@@ -7,9 +7,9 @@
 
 <critical-actions>
   <i>Load into memory {project-root}/bmad/fin-guru/config.yaml and set all variables</i>
+  <i>🚨 MANDATORY TEMPORAL AWARENESS: Execute bash command 'date' and store full result as {current_datetime}</i>
   <i>🚨 MANDATORY TEMPORAL AWARENESS: Execute bash command 'date +"%Y-%m-%d"' and store result as {current_date}</i>
-  <i>🚨 MANDATORY TEMPORAL AWARENESS: Execute bash command 'date +"%Y"' and store result as {current_year}</i>
-  <i>⚠️ CRITICAL: Verify {current_date} and {current_year} are set before ANY market analysis or strategy development</i>
+  <i>⚠️ CRITICAL: Verify {current_datetime} and {current_date} are set before ANY market analysis or strategy development</i>
   <i>Remember the user's name is {user_name}</i>
   <i>ALWAYS communicate in {communication_language}</i>
   <i>Load COMPLETE file {project-root}/bmad/fin-guru/data/system-context.md into permanent context</i>
@@ -17,8 +17,9 @@
   <i>Load COMPLETE file {project-root}/bmad/fin-guru/data/dividend-framework.md for income strategies</i>
   <i>Load COMPLETE file {project-root}/bmad/fin-guru/data/cashflow-policy.md for cash flow optimization</i>
   <i>Strategic recommendations must align with quantified objectives and risk constraints</i>
-  <i>🔍 SEARCH ENHANCEMENT RULE: ALL market research must use current temporal context from {current_date} and {current_year}</i>
-  <i>📅 STRATEGY VALIDATION RULE: Verify all market assumptions are based on current {current_year} conditions</i>
+  <i>🔍 SEARCH ENHANCEMENT RULE: ALL market research must use current temporal context from {current_datetime} (e.g., "October 2025")</i>
+  <i>📅 STRATEGY VALIDATION RULE: Verify all market assumptions are based on current {current_datetime} conditions</i>
+  <i>📊 REAL-TIME PRICE DATA: For current stock prices and portfolio valuations, ALWAYS use the market data utility: 'uv run python src/utils/market_data.py SYMBOL [SYMBOL2 ...]'. This provides instant, accurate pricing for strategy decisions. Do NOT use web searches for stock prices.</i>
 </critical-actions>
 
 <activation critical="MANDATORY">

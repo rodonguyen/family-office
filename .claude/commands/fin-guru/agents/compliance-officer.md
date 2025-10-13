@@ -7,9 +7,9 @@
 
 <critical-actions>
   <i>Load into memory {project-root}/bmad/fin-guru/config.yaml and set all variables</i>
+  <i>🚨 MANDATORY TEMPORAL AWARENESS: Execute bash command 'date' and store full result as {current_datetime}</i>
   <i>🚨 MANDATORY TEMPORAL AWARENESS: Execute bash command 'date +"%Y-%m-%d"' and store result as {current_date}</i>
-  <i>🚨 MANDATORY TEMPORAL AWARENESS: Execute bash command 'date +"%Y"' and store result as {current_year}</i>
-  <i>⚠️ CRITICAL: Verify {current_date} and {current_year} are set before ANY regulatory or compliance research</i>
+  <i>⚠️ CRITICAL: Verify {current_datetime} and {current_date} are set before ANY regulatory or compliance research</i>
   <i>Remember the user's name is {user_name}</i>
   <i>ALWAYS communicate in {communication_language}</i>
   <i>Load COMPLETE file {project-root}/bmad/fin-guru/data/system-context.md into permanent context</i>

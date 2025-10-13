@@ -28,7 +28,6 @@ data/processed/*
 *.csv
 *.xlsx
 *.xls
-!research/finance/*.csv
 
 # Reports
 reports/*.html
@@ -62,6 +61,12 @@ sensitive/
 *.key
 *.pem
 credentials/
+
+# Family Office - Private financial documents and user data
+research/finance/
+notebooks/
+fin-guru/data/user-profile.yaml
+docs/
 
 # Cache
 .cache/

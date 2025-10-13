@@ -104,20 +104,22 @@ This workflow defines the comprehensive research methodology for Finance Guru ag
 **Execution**:
 
 ```bash
-# Get current date and year
+# Get full current datetime with month, day, year
+date
+
+# Get structured date for documentation
 date +"%Y-%m-%d"
-date +"%Y"
 ```
 
 **Store Results**:
-- `{current_date}` = Full date (e.g., "2025-10-12")
-- `{current_year}` = Year only (e.g., "2025")
+- `{current_datetime}` = Full datetime (e.g., "Sun Oct 12 23:53:51 CDT 2025")
+- `{current_date}` = Structured date (e.g., "2025-10-12")
 
 **Validation Checkpoint**:
-- [ ] Current date successfully retrieved and stored as {current_date}
-- [ ] Current year successfully extracted and stored as {current_year}
-- [ ] Date format verified as YYYY-MM-DD
-- [ ] Year is within reasonable range (2025-2030)
+- [ ] Full datetime successfully retrieved and stored as {current_datetime}
+- [ ] Structured date successfully retrieved and stored as {current_date}
+- [ ] Datetime includes month, day, and year
+- [ ] Structured date format verified as YYYY-MM-DD
 
 **On Failure**: If temporal context cannot be established, STOP ALL RESEARCH ACTIVITY and report error to user. Do not proceed to Phase 1.
 
@@ -128,17 +130,17 @@ date +"%Y"
 All web searches conducted in this workflow MUST include temporal qualifiers. Non-compliant searches are PROHIBITED.
 
 **Temporal Qualifier Requirements**:
-1. Include `{current_year}` in query, OR
+1. Include month and year from `{current_datetime}` (e.g., "October 2025"), OR
 2. Include "latest" keyword, OR
 3. Include "current" keyword
 
-**Examples**:
+**Examples** (using current datetime: Sun Oct 12 23:53:51 CDT 2025):
 
 ✅ **COMPLIANT QUERIES**:
-- "Tesla stock analysis {current_year} latest"
-- "Federal Reserve policy October {current_year}"
+- "Tesla stock analysis October 2025 latest"
+- "Federal Reserve policy October 2025"
 - "Current S&P 500 valuation metrics"
-- "Latest GDP growth data United States"
+- "Latest GDP growth data United States 2025"
 
 ❌ **NON-COMPLIANT QUERIES** (DO NOT USE):
 - "Tesla stock analysis"
@@ -176,11 +178,11 @@ Display confirmation message before proceeding:
 ```
 ✅ TEMPORAL AWARENESS CONFIRMED
 
-Current Date: {current_date}
-Current Year: {current_year}
+Current DateTime: {current_datetime}
+Structured Date: {current_date}
 
 📋 Search Enhancement Rules Active:
-• All queries MUST include {current_year}, "latest", or "current"
+• All queries MUST include month/year (e.g., "October 2025"), "latest", or "current"
 • Market data: Same-day only
 • Economic data: Within 30 days
 • Regulatory data: Within 90 days
