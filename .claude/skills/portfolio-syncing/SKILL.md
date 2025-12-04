@@ -82,6 +82,11 @@ Update Column G (Avg Cost Basis) = CSV Average Cost Basis
 - Columns H-M (Gains/Losses) - Calculated formulas
 - Columns N-S (Ranges, dividends, layer) - Formulas or manual classification
 
+**🚨 CRITICAL: NEVER PASS EMPTY STRINGS TO FORMULA COLUMNS**
+- **WRONG**: Updating entire row range with empty strings (`""`) will OVERWRITE formulas
+- **RIGHT**: Update ONLY columns A, B, G using individual cell ranges
+- Empty strings (`""`) will DELETE formulas in columns C-F - this BREAKS the sheet
+
 #### For NEW Tickers:
 ```
 1. Add new row
@@ -189,34 +194,93 @@ Use these patterns to auto-classify new tickers in Column S:
 
 **Spreadsheet ID**: Read from `fin-guru/data/user-profile.yaml` → `google_sheets.portfolio_tracker.spreadsheet_id`
 
-**Use the mcp__gdrive__sheets tool**:
+### ❌ BAD: Multi-Column Range Updates with Empty Strings
+
+**THIS WILL BREAK FORMULAS:**
 ```javascript
-// STEP 1: Read Spreadsheet ID from user profile
-// Load fin-guru/data/user-profile.yaml
-// Extract: google_sheets.portfolio_tracker.spreadsheet_id
-
-// STEP 2: Read DataHub
+// ❌ WRONG - Passing empty strings overwrites formulas in columns C-F
 mcp__gdrive__sheets(
-    operation: "spreadsheets.values.get",
+    operation: "updateCells",
     params: {
-        spreadsheetId: SPREADSHEET_ID,  // from user-profile.yaml
-        range: "DataHub!A2:G50"
-    }
-)
-
-// STEP 3: Update cells (Columns A, B, G only)
-mcp__gdrive__sheets(
-    operation: "spreadsheets.values.update",
-    params: {
-        spreadsheetId: SPREADSHEET_ID,  // from user-profile.yaml
-        range: "DataHub!A2:G50",
-        valueInputOption: "USER_ENTERED",
-        requestBody: {
-            values: [[ticker, quantity, "", "", "", "", avg_cost], ...]
-        }
+        spreadsheetId: SPREADSHEET_ID,
+        range: "DataHub!A13:G27",  // ❌ Multi-column range
+        values: [
+            ["JEPI", "72.942", "", "", "", "", "$56.48"],  // ❌ Empty strings kill formulas
+            ["JEPQ", "92.043", "", "", "", "", "$58.08"],
+            ["CLM", "763.367", "", "", "", "", "$8.32"]
+        ]
     }
 )
 ```
+**Why this breaks**: Empty strings (`""`) in columns C-F **DELETE** the GOOGLEFINANCE and calculation formulas.
+
+---
+
+### ✅ GOOD: Individual Cell Updates (Columns A, B, G Only)
+
+**THIS PRESERVES FORMULAS:**
+```javascript
+// ✅ RIGHT - Update ONLY writable columns, one at a time
+// Update JEPI quantity (Column B only)
+mcp__gdrive__sheets(
+    operation: "updateCells",
+    params: {
+        spreadsheetId: SPREADSHEET_ID,
+        range: "DataHub!B13:B13",  // ✅ Single column, specific row
+        values: [["72.942"]]
+    }
+)
+
+// Update JEPI cost basis (Column G only)
+mcp__gdrive__sheets(
+    operation: "updateCells",
+    params: {
+        spreadsheetId: SPREADSHEET_ID,
+        range: "DataHub!G13:G13",  // ✅ Single column, specific row
+        values: [["$56.48"]]
+    }
+)
+
+// Add new ticker (Columns A, B, G - formulas in C-F will auto-populate)
+mcp__gdrive__sheets(
+    operation: "updateCells",
+    params: {
+        spreadsheetId: SPREADSHEET_ID,
+        range: "DataHub!A28:A28",  // ✅ Ticker only
+        values: [["ECAT"]]
+    }
+)
+mcp__gdrive__sheets(
+    operation: "updateCells",
+    params: {
+        spreadsheetId: SPREADSHEET_ID,
+        range: "DataHub!B28:B28",  // ✅ Quantity only
+        values: [["72.884"]]
+    }
+)
+mcp__gdrive__sheets(
+    operation: "updateCells",
+    params: {
+        spreadsheetId: SPREADSHEET_ID,
+        range: "DataHub!G28:G28",  // ✅ Cost basis only
+        values: [["$15.92"]]
+    }
+)
+```
+**Why this works**: Only touching columns A, B, G leaves formulas in C-F intact and functional.
+
+---
+
+### Update Pattern Summary
+
+| Action | ✅ GOOD | ❌ BAD |
+|--------|---------|--------|
+| **Update quantity** | `range: "DataHub!B13:B13"` | `range: "DataHub!A13:G13"` with `["", "72.942", "", "", "", "", ""]` |
+| **Update cost basis** | `range: "DataHub!G13:G13"` | Including columns C-F in range |
+| **Add new ticker** | 3 separate calls (A, B, G) | Single call with empty strings in C-F |
+| **Multiple tickers** | Loop through rows, update B and G individually | Batch update entire range A:G |
+
+**Golden Rule**: **NEVER** include columns C-F in your update range. **NEVER** pass empty strings to any cell.
 
 ## Agent Permissions
 
