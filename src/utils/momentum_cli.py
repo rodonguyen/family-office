@@ -15,8 +15,14 @@ AGENT USAGE:
     # Basic usage (calculate all momentum indicators)
     uv run python src/utils/momentum_cli.py TSLA --days 90
 
+    # Real-time momentum with Finnhub (RECOMMENDED for live analysis!)
+    uv run python src/utils/momentum_cli.py TSLA --days 90 --realtime
+
     # Specific indicator only
     uv run python src/utils/momentum_cli.py TSLA --days 90 --indicator rsi
+
+    # Real-time RSI for quick intraday signals
+    uv run python src/utils/momentum_cli.py TSLA --days 90 --indicator rsi --realtime
 
     # Custom configuration
     uv run python src/utils/momentum_cli.py TSLA --days 90 \\
@@ -62,15 +68,17 @@ from src.models.momentum_inputs import (
     ROCOutput,
 )
 from src.utils.momentum import MomentumIndicators
+from src.utils.market_data import get_prices  # Finnhub integration
 
 
-def fetch_momentum_data(ticker: str, days: int) -> MomentumDataInput:
+def fetch_momentum_data(ticker: str, days: int, realtime: bool = False) -> MomentumDataInput:
     """
     Fetch historical OHLC data for momentum calculations.
 
     Args:
         ticker: Stock ticker symbol
         days: Number of days of historical data
+        realtime: If True, append current intraday price from Finnhub (default: False)
 
     Returns:
         MomentumDataInput: Validated OHLC data
@@ -98,6 +106,24 @@ def fetch_momentum_data(ticker: str, days: int) -> MomentumDataInput:
         close_list = hist['Close'].tolist()
         high_list = hist['High'].tolist()
         low_list = hist['Low'].tolist()
+
+        # FINNHUB INTEGRATION: Append real-time intraday price if requested
+        if realtime:
+            try:
+                # Get real-time price from Finnhub
+                rt_data = get_prices(ticker, realtime=True)
+                if ticker.upper() in rt_data:
+                    price_data = rt_data[ticker.upper()]
+                    current_price = price_data.price
+                    # Append today's date and current price to the data
+                    # For momentum, we use current price for all OHLC values (conservative approach)
+                    dates_list.append(date.today())
+                    close_list.append(current_price)
+                    high_list.append(current_price)  # Conservative: use current as high
+                    low_list.append(current_price)   # Conservative: use current as low
+                    print(f"✅ Real-time price appended: ${current_price:.2f} (Finnhub)", file=sys.stderr)
+            except Exception as e:
+                print(f"⚠️  Real-time price unavailable, using EOD data only: {e}", file=sys.stderr)
 
         # Ensure minimum data points
         if len(dates_list) < 14:
@@ -327,6 +353,12 @@ Examples:
     )
 
     parser.add_argument(
+        "--realtime",
+        action="store_true",
+        help="Append current intraday price from Finnhub for real-time momentum analysis"
+    )
+
+    parser.add_argument(
         "--indicator",
         type=str,
         choices=["all", "rsi", "macd", "stochastic", "williams", "roc"],
@@ -417,10 +449,11 @@ Examples:
 
     try:
         # Step 1: Fetch data
-        print(f"📥 Fetching {args.days} days of data for {args.ticker}...", file=sys.stderr)
-        momentum_data = fetch_momentum_data(args.ticker, args.days)
+        data_source = "real-time (Finnhub + yfinance)" if args.realtime else "end-of-day (yfinance)"
+        print(f"📥 Fetching {args.days} days of data for {args.ticker} ({data_source})...", file=sys.stderr)
+        momentum_data = fetch_momentum_data(args.ticker, args.days, realtime=args.realtime)
         print(f"✅ Fetched {len(momentum_data.dates)} data points", file=sys.stderr)
-        print(f"📅 Latest data: {momentum_data.dates[-1]} (most recent market close)", file=sys.stderr)
+        print(f"📅 Latest data: {momentum_data.dates[-1]}", file=sys.stderr)
 
         # Step 2: Create configuration
         config = MomentumConfig(

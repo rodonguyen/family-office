@@ -15,17 +15,20 @@ AGENT USAGE:
     # Single MA calculation
     uv run python src/utils/moving_averages_cli.py TSLA --days 200 --ma-type SMA --period 50
 
-    # Crossover detection (50/200 Golden Cross)
-    uv run python src/utils/moving_averages_cli.py TSLA --days 252 --fast 50 --slow 200
+    # Real-time MA with Finnhub (RECOMMENDED for live trend analysis!)
+    uv run python src/utils/moving_averages_cli.py TSLA --days 200 --ma-type SMA --period 50 --realtime
+
+    # Crossover detection (50/200 Golden Cross) - real-time!
+    uv run python src/utils/moving_averages_cli.py TSLA --days 252 --fast 50 --slow 200 --realtime
 
     # Multiple MA types comparison
     uv run python src/utils/moving_averages_cli.py TSLA --days 200 \\
         --ma-type SMA --period 50 \\
         --secondary-ma-type EMA --secondary-period 50
 
-    # EMA crossover
+    # EMA crossover with real-time data
     uv run python src/utils/moving_averages_cli.py TSLA --days 252 \\
-        --ma-type EMA --fast 12 --slow 26
+        --ma-type EMA --fast 12 --slow 26 --realtime
 
     # JSON output
     uv run python src/utils/moving_averages_cli.py TSLA --days 200 --ma-type SMA --period 50 --output json
@@ -62,15 +65,17 @@ from src.models.moving_avg_inputs import (
     MovingAverageAnalysis,
 )
 from src.utils.moving_averages import MovingAverageCalculator
+from src.utils.market_data import get_prices  # Finnhub integration
 
 
-def fetch_ma_data(ticker: str, days: int) -> MovingAverageDataInput:
+def fetch_ma_data(ticker: str, days: int, realtime: bool = False) -> MovingAverageDataInput:
     """
-    Fetch historical price data for MA calculations.
+    Fetch historical price data for MA calculations, optionally with real-time Finnhub data.
 
     Args:
         ticker: Stock ticker symbol
         days: Number of days of historical data
+        realtime: If True, append current intraday price from Finnhub (default: False)
 
     Returns:
         MovingAverageDataInput: Validated price data
@@ -96,6 +101,21 @@ def fetch_ma_data(ticker: str, days: int) -> MovingAverageDataInput:
         # Extract price data
         dates_list = [d.date() for d in hist.index]
         prices_list = hist['Close'].tolist()
+
+        # FINNHUB INTEGRATION: Append real-time intraday price if requested
+        if realtime:
+            try:
+                # Get real-time price from Finnhub
+                rt_data = get_prices(ticker, realtime=True)
+                if ticker.upper() in rt_data:
+                    price_data = rt_data[ticker.upper()]
+                    current_price = price_data.price
+                    # Append today's date and current price to the data
+                    dates_list.append(date.today())
+                    prices_list.append(current_price)
+                    print(f"✅ Real-time price appended: ${current_price:.2f} (Finnhub)", file=sys.stderr)
+            except Exception as e:
+                print(f"⚠️  Real-time price unavailable, using EOD data only: {e}", file=sys.stderr)
 
         # Ensure minimum data points
         if len(dates_list) < 50:
@@ -394,6 +414,12 @@ Examples:
         help="Number of days of historical data (default: 200, minimum: 50)"
     )
 
+    parser.add_argument(
+        "--realtime",
+        action="store_true",
+        help="Append current intraday price from Finnhub for real-time MA analysis"
+    )
+
     # MA configuration
     parser.add_argument(
         "--ma-type",
@@ -494,10 +520,11 @@ Examples:
 
     try:
         # Step 1: Fetch data
-        print(f"📥 Fetching {args.days} days of data for {args.ticker}...", file=sys.stderr)
-        ma_data = fetch_ma_data(args.ticker, args.days)
+        data_source = "real-time (Finnhub + yfinance)" if args.realtime else "end-of-day (yfinance)"
+        print(f"📥 Fetching {args.days} days of data for {args.ticker} ({data_source})...", file=sys.stderr)
+        ma_data = fetch_ma_data(args.ticker, args.days, realtime=args.realtime)
         print(f"✅ Fetched {len(ma_data.dates)} data points", file=sys.stderr)
-        print(f"📅 Latest data: {ma_data.dates[-1]} (most recent market close)", file=sys.stderr)
+        print(f"📅 Latest data: {ma_data.dates[-1]}", file=sys.stderr)
 
         # Step 2: Create configuration
         config = MovingAverageConfig(

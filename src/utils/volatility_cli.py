@@ -10,18 +10,21 @@ USAGE:
     # Quick volatility scan (all indicators with defaults)
     uv run python src/utils/volatility_cli.py TSLA --days 90
 
+    # Real-time volatility with Finnhub (RECOMMENDED for live analysis!)
+    uv run python src/utils/volatility_cli.py TSLA --days 90 --realtime
+
     # Custom Bollinger Bands settings
     uv run python src/utils/volatility_cli.py TSLA --days 90 --bb-period 14 --bb-std 2.5
 
-    # Custom ATR period
-    uv run python src/utils/volatility_cli.py TSLA --days 90 --atr-period 20
+    # Custom ATR period with real-time data
+    uv run python src/utils/volatility_cli.py TSLA --days 90 --atr-period 20 --realtime
 
     # JSON output for programmatic use
     uv run python src/utils/volatility_cli.py TSLA --days 90 --output json
 
-    # Portfolio volatility comparison
+    # Portfolio volatility comparison (real-time!)
     for ticker in TSLA PLTR NVDA; do
-        uv run python src/utils/volatility_cli.py $ticker --days 90
+        uv run python src/utils/volatility_cli.py $ticker --days 90 --realtime
     done
 
 AGENT USE CASES:
@@ -48,11 +51,12 @@ from src.models.volatility_inputs import (
     VolatilityDataInput,
 )
 from src.utils.volatility import calculate_volatility
+from src.utils.market_data import get_prices  # Finnhub integration
 
 
-def fetch_price_data(ticker: str, days: int) -> VolatilityDataInput:
+def fetch_price_data(ticker: str, days: int, realtime: bool = False) -> VolatilityDataInput:
     """
-    Fetch OHLC price data from yfinance.
+    Fetch OHLC price data from yfinance, optionally with real-time Finnhub data.
 
     EDUCATIONAL NOTE:
     We need High, Low, and Close prices (not just Close) because:
@@ -63,6 +67,7 @@ def fetch_price_data(ticker: str, days: int) -> VolatilityDataInput:
     Args:
         ticker: Stock symbol
         days: Number of days of historical data
+        realtime: If True, append current intraday price from Finnhub (default: False)
 
     Returns:
         VolatilityDataInput with OHLC data
@@ -89,13 +94,38 @@ def fetch_price_data(ticker: str, days: int) -> VolatilityDataInput:
             f"Insufficient data for {ticker}. Need at least 20 days, got {len(hist)}"
         )
 
+    # Extract OHLC data
+    dates_list = [d.date() for d in hist.index]
+    high_list = hist['High'].tolist()
+    low_list = hist['Low'].tolist()
+    close_list = hist['Close'].tolist()
+
+    # FINNHUB INTEGRATION: Append real-time intraday price if requested
+    if realtime:
+        try:
+            # Get real-time price from Finnhub
+            rt_data = get_prices(ticker, realtime=True)
+            if ticker.upper() in rt_data:
+                price_data = rt_data[ticker.upper()]
+                current_price = price_data.price
+                # Append today's date and current price to the data
+                # For volatility, we use current price for all OHLC values (conservative)
+                from datetime import date
+                dates_list.append(date.today())
+                high_list.append(current_price)
+                low_list.append(current_price)
+                close_list.append(current_price)
+                print(f"✅ Real-time price appended: ${current_price:.2f} (Finnhub)", file=sys.stderr)
+        except Exception as e:
+            print(f"⚠️  Real-time price unavailable, using EOD data only: {e}", file=sys.stderr)
+
     # Convert to VolatilityDataInput
     return VolatilityDataInput(
         ticker=ticker.upper(),
-        dates=[d.date() for d in hist.index],
-        high=hist['High'].tolist(),
-        low=hist['Low'].tolist(),
-        close=hist['Close'].tolist(),
+        dates=dates_list,
+        high=high_list,
+        low=low_list,
+        close=close_list,
     )
 
 
@@ -262,6 +292,12 @@ Agent Use Cases:
         help='Number of days of historical data (default: 90)'
     )
 
+    parser.add_argument(
+        '--realtime',
+        action='store_true',
+        help='Append current intraday price from Finnhub for real-time volatility analysis'
+    )
+
     # Bollinger Bands configuration
     parser.add_argument(
         '--bb-period',
@@ -320,8 +356,9 @@ Agent Use Cases:
 
     try:
         # Fetch price data
-        print(f"Fetching {args.days} days of price data for {args.ticker}...", file=sys.stderr)
-        data = fetch_price_data(args.ticker, args.days)
+        data_source = "real-time (Finnhub + yfinance)" if args.realtime else "end-of-day (yfinance)"
+        print(f"Fetching {args.days} days of price data for {args.ticker} ({data_source})...", file=sys.stderr)
+        data = fetch_price_data(args.ticker, args.days, realtime=args.realtime)
 
         # Create configuration
         config = VolatilityConfig(

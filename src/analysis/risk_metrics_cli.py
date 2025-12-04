@@ -15,8 +15,11 @@ AGENT USAGE:
     # Basic usage (30 days of data required)
     uv run python src/analysis/risk_metrics_cli.py TSLA --days 90
 
-    # With benchmark (calculate beta/alpha)
-    uv run python src/analysis/risk_metrics_cli.py TSLA --days 90 --benchmark SPY
+    # Real-time risk analysis with Finnhub (RECOMMENDED for live assessment!)
+    uv run python src/analysis/risk_metrics_cli.py TSLA --days 90 --realtime
+
+    # With benchmark (calculate beta/alpha) - real-time for both ticker and benchmark
+    uv run python src/analysis/risk_metrics_cli.py TSLA --days 90 --benchmark SPY --realtime
 
     # Custom configuration
     uv run python src/analysis/risk_metrics_cli.py TSLA --days 252 \\
@@ -61,19 +64,22 @@ from src.models.risk_inputs import (
     RiskMetricsOutput,
 )
 from src.analysis.risk_metrics import RiskCalculator
+from src.utils.market_data import get_prices  # Finnhub integration
 
 
-def fetch_price_data(ticker: str, days: int) -> PriceDataInput:
+def fetch_price_data(ticker: str, days: int, realtime: bool = False) -> PriceDataInput:
     """
-    Fetch historical price data for a ticker.
+    Fetch historical price data for a ticker, optionally with real-time Finnhub data.
 
     EDUCATIONAL NOTE:
     This function integrates with your existing market_data.py utility.
     It fetches price data and converts it to our validated PriceDataInput model.
+    When realtime=True, appends current intraday price from Finnhub.
 
     Args:
         ticker: Stock ticker symbol
         days: Number of days of historical data
+        realtime: If True, append current intraday price from Finnhub (default: False)
 
     Returns:
         PriceDataInput: Validated price data
@@ -100,6 +106,21 @@ def fetch_price_data(ticker: str, days: int) -> PriceDataInput:
         # Extract prices and dates
         prices = hist['Close'].tolist()
         dates = [d.date() for d in hist.index]
+
+        # FINNHUB INTEGRATION: Append real-time intraday price if requested
+        if realtime:
+            try:
+                # Get real-time price from Finnhub
+                rt_data = get_prices(ticker, realtime=True)
+                if ticker.upper() in rt_data:
+                    price_data = rt_data[ticker.upper()]
+                    current_price = price_data.price
+                    # Append today's date and current price to the data
+                    prices.append(current_price)
+                    dates.append(date.today())
+                    print(f"✅ Real-time price appended: ${current_price:.2f} (Finnhub)", file=sys.stderr)
+            except Exception as e:
+                print(f"⚠️  Real-time price unavailable, using EOD data only: {e}", file=sys.stderr)
 
         # Ensure we have minimum required data points
         if len(prices) < 30:
@@ -313,6 +334,12 @@ Examples:
         help="Benchmark ticker for beta/alpha calculation (e.g., SPY)"
     )
 
+    parser.add_argument(
+        "--realtime",
+        action="store_true",
+        help="Append current intraday price from Finnhub for real-time risk analysis"
+    )
+
     # Risk calculation parameters
     parser.add_argument(
         "--confidence",
@@ -362,16 +389,17 @@ Examples:
 
     try:
         # Step 1: Fetch price data
-        print(f"📥 Fetching {args.days} days of data for {args.ticker}...", file=sys.stderr)
-        price_data = fetch_price_data(args.ticker, args.days)
+        data_source = "real-time (Finnhub + yfinance)" if args.realtime else "end-of-day (yfinance)"
+        print(f"📥 Fetching {args.days} days of data for {args.ticker} ({data_source})...", file=sys.stderr)
+        price_data = fetch_price_data(args.ticker, args.days, realtime=args.realtime)
         print(f"✅ Fetched {len(price_data.prices)} data points", file=sys.stderr)
-        print(f"📅 Latest data: {price_data.dates[-1]} (most recent market close)", file=sys.stderr)
+        print(f"📅 Latest data: {price_data.dates[-1]}", file=sys.stderr)
 
         # Step 2: Fetch benchmark data (if requested)
         benchmark_data = None
         if args.benchmark:
-            print(f"📥 Fetching benchmark data for {args.benchmark}...", file=sys.stderr)
-            benchmark_data = fetch_price_data(args.benchmark, args.days)
+            print(f"📥 Fetching benchmark data for {args.benchmark} ({data_source})...", file=sys.stderr)
+            benchmark_data = fetch_price_data(args.benchmark, args.days, realtime=args.realtime)
             print(f"✅ Fetched {len(benchmark_data.prices)} benchmark points", file=sys.stderr)
 
         # Step 3: Create configuration
