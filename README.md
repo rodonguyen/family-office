@@ -121,6 +121,10 @@ curl -fsSL https://claude.ai/install.sh | bash
 # Python 3.12+ with uv package manager
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
+# Google Drive MCP Server (for portfolio syncing)
+git clone https://github.com/AojdevStudio/gdrive.git
+cd gdrive && npm install && npm run build
+
 # Install dependencies
 uv sync
 ```
