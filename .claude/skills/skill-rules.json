@@ -2,66 +2,6 @@
     "version": "1.0",
     "description": "Skill activation triggers for Claude Code. Controls when skills automatically suggest or block actions.",
     "skills": {
-        "skill-developer": {
-            "type": "domain",
-            "enforcement": "block",
-            "priority": "high",
-            "description": "Meta-skill for creating and managing Claude Code skills",
-            "promptTriggers": {
-                "keywords": [
-                    "skill system",
-                    "create skill",
-                    "add skill",
-                    "skill triggers",
-                    "skill rules",
-                    "hook system",
-                    "skill development",
-                    "skill-rules.json"
-                ],
-                "intentPatterns": [
-                    "(how do|how does|explain).*?skill",
-                    "(create|add|modify|build).*?skill",
-                    "skill.*?(work|trigger|activate|system)"
-                ]
-            }
-        },
-        "error-tracking": {
-            "type": "domain",
-            "enforcement": "suggest",
-            "priority": "high",
-            "description": "Sentry error tracking and performance monitoring patterns",
-            "promptTriggers": {
-                "keywords": [
-                    "error handling",
-                    "exception",
-                    "sentry",
-                    "error tracking",
-                    "captureException",
-                    "monitoring",
-                    "performance tracking"
-                ],
-                "intentPatterns": [
-                    "(add|create|implement|setup).*?(error handling|sentry|error tracking)",
-                    "(fix|handle|catch).*?(error|exception)",
-                    "(how to|best practice).*?(error|sentry|monitoring)"
-                ]
-            },
-            "fileTriggers": {
-                "pathPatterns": [
-                    "backend/app/**/*.py",
-                    "backend/app/api/**/*.py",
-                    "backend/app/services/**/*.py",
-                    "backend/app/core/**/*.py"
-                ],
-                "contentPatterns": [
-                    "import sentry_sdk",
-                    "from sentry_sdk",
-                    "sentry_sdk\\.",
-                    "capture_exception",
-                    "capture_message"
-                ]
-            }
-        },
         "PortfolioSyncing": {
             "type": "domain",
             "enforcement": "block",
