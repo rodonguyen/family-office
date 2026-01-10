@@ -1,55 +1,61 @@
-# /rbp:start - Start Ralph Execution Loop
+---
+allowed-tools: Bash, Read, Glob
+description: Start the RBP autonomous execution loop
+argument-hint: [spec-file | max-iterations]
+---
 
-Start the RBP autonomous execution loop on the current project.
+# /rbp:start
 
-## What This Does
+Start the RBP autonomous execution loop to implement tasks with test-gated verification.
 
-1. Checks prerequisites (beads, bun, claude)
-2. Queries `bd ready` for the next available task
-3. Executes the task via Claude Code
-4. Requires test verification before closing beads
-5. Repeats until all tasks complete or max iterations reached
+## Variables
 
-## Usage
+ARG1: $1 (optional - either a spec file path OR max iterations number)
+MAX_ITERATIONS: default 10
+SCRIPTS_DIR: scripts/rbp
+PROGRESS_FILE: scripts/rbp/progress.txt
 
-Run this command when you have beads ready for execution.
+## Workflow
 
-## Prerequisites
+1. Run `bd status` to show current task state
+2. Run `bd ready` to check for available tasks
 
-- `.beads/` initialized (`bd init`)
-- Tasks created in beads (`bd create` or `parse-story-to-beads.sh`)
-- `bun` installed for running tests
-- Tests configured in `package.json`
+### If NO tasks available:
 
-## Execution
+3. **Auto-discover specs** - Look for spec files:
+   - Check if ARG1 is a file path (ends in .md) → use that spec
+   - Otherwise, search common spec locations:
+     - `specs/*.md`
+     - `docs/specs/*.md`
+     - `*.spec.md`
+   - Use Glob tool to find spec files
 
-```bash
-# Start with default 50 iterations
-./scripts/rbp/ralph.sh
+4. **If spec found:**
+   - Show the spec file(s) found
+   - Ask user which spec to use (if multiple)
+   - Run `./rbp/scripts/parse-spec-to-beads.sh <spec-file>` to create tasks
+   - Run `bd ready` again to confirm tasks were created
 
-# Start with custom iteration limit
-./scripts/rbp/ralph.sh 100
-```
+5. **If NO spec found:**
+   - Report "No tasks in beads and no spec files found"
+   - Suggest: "Create a spec with /quick-plan or add tasks with bd create"
+   - Stop
 
-## During Execution
+### If tasks ARE available:
 
-The loop will:
-1. Display current task from `bd ready`
-2. Execute implementation via Claude Code
-3. Run `close-with-proof.sh` to verify tests pass
-4. Close the bead only if all tests pass
-5. Move to next task
+6. Confirm with user before starting execution loop
+7. Run `./rbp/scripts/ralph.sh MAX_ITERATIONS` to start the execution loop
+8. Monitor output for completion or errors
 
-## Stopping the Loop
+## Report
 
-- Press `Ctrl+C` to interrupt
-- The loop stops automatically when all tasks complete
-- Progress is saved to `scripts/rbp/progress.txt`
+RBP Execution Started
 
-## After Completion
+Status: Execution loop running
+Max Iterations: `MAX_ITERATIONS`
+Progress Log: `PROGRESS_FILE`
 
-View final status with:
-```bash
-bd status
-bd list --closed
-```
+Monitor with:
+- `bd status` - Task overview
+- `tail -f `PROGRESS_FILE`` - Live progress
+- `Ctrl+C` - Stop execution

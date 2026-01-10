@@ -2,7 +2,7 @@
 # Copy this file to your project root as rbp-config.yaml
 
 project:
-  name: "finance-guru"
+  name: "your-project-name"
   description: "Autonomous Epic implementation with BMAD + Beads"
 
 paths:
@@ -10,7 +10,7 @@ paths:
   stories: "docs/bmm/implementation-artifacts/stories"
 
   # Where quick-plan specs are saved
-  specs: "docs/specs"
+  specs: "specs"
 
   # Where beads state is stored (created by bd init)
   beads: ".beads"
@@ -23,7 +23,7 @@ paths:
 
 execution:
   # Maximum Ralph loop iterations before stopping
-  max_iterations: 50
+  max_iterations: 10
 
   # Subtasks per execution phase (for large tasks)
   phase_size: 5
@@ -89,7 +89,7 @@ codex:
   enabled: true
 
   # Codex model to use
-  model: "gpt-5.2-codex"
+  model: "gpt-5-codex"
 
   # Reasoning effort level (low, medium, high)
   reasoning_effort: "high"

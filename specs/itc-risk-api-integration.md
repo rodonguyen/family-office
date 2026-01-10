@@ -1179,6 +1179,69 @@ BTC, ETH, BNB, SOL, XRP, ADA, DOGE, LINK, AVAX, DOT, SHIB, LTC, AAVE, ATOM, POL,
 
 ---
 
+## Implementation Tasks
+
+<!-- RBP-TASKS-START -->
+
+### Task 1: Create ITC Risk Data Models (Layer 1)
+- **ID:** itc-001
+- **Dependencies:** none
+- **Files:** `src/models/itc_risk_inputs.py`
+- **Acceptance:** Pydantic models validate correctly, all fields documented
+- **Tests:** `uv run pytest tests/test_itc_risk.py::test_models -v`
+
+### Task 2: Create ITC Risk Calculator (Layer 2)
+- **ID:** itc-002
+- **Dependencies:** itc-001
+- **Files:** `src/analysis/itc_risk.py`
+- **Acceptance:** Calculator fetches data from ITC API, handles errors gracefully, retry logic works
+- **Tests:** `uv run pytest tests/test_itc_risk.py::test_calculator -v`
+
+### Task 3: Create ITC Risk CLI (Layer 3)
+- **ID:** itc-003
+- **Dependencies:** itc-002
+- **Files:** `src/analysis/itc_risk_cli.py`
+- **Acceptance:** CLI outputs human and JSON formats, batch processing works, error messages clear
+- **Tests:** `uv run python src/analysis/itc_risk_cli.py TSLA --universe tradfi`
+
+### Task 4: Update Environment Configuration
+- **ID:** itc-004
+- **Dependencies:** none
+- **Files:** `.env.example`
+- **Acceptance:** ITC_API_KEY entry added with comment
+- **Tests:** `grep ITC_API_KEY .env.example`
+
+### Task 5: Create Unit Tests
+- **ID:** itc-005
+- **Dependencies:** itc-003
+- **Files:** `tests/test_itc_risk.py`
+- **Acceptance:** All unit tests pass, covers models, calculator, and CLI
+- **Tests:** `uv run pytest tests/test_itc_risk.py -v`
+
+### Task 6: Update Agent Prompts
+- **ID:** itc-006
+- **Dependencies:** itc-003
+- **Files:** `.claude/commands/fin-guru/agents/market-researcher.md`, `.claude/commands/fin-guru/agents/strategy-advisor.md`, `.claude/commands/fin-guru/agents/quant-analyst.md`
+- **Acceptance:** All three agent prompts include ITC integration section
+- **Tests:** `grep -l "ITC Risk" .claude/commands/fin-guru/agents/*.md | wc -l` (should be 3)
+
+### Task 7: Update CLAUDE.md Tool Matrix
+- **ID:** itc-007
+- **Dependencies:** itc-006
+- **Files:** `CLAUDE.md`
+- **Acceptance:** Agent-Tool Matrix includes ITC risk CLI entries
+- **Tests:** `grep -q "itc_risk_cli" CLAUDE.md`
+
+<!-- RBP-TASKS-END -->
+
+### Test Command
+
+```bash
+uv run pytest tests/test_itc_risk.py -v
+```
+
+---
+
 **End of Specification**
 
 **Status:** ✅ Ready for Implementation - Zero Open Questions
