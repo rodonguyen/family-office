@@ -1,14 +1,24 @@
-# Finance Guru™
+<p align="center">
+  <img src="docs/images/finance-guru-logo.png" alt="Finance Guru Logo" width="200"/>
+</p>
 
-[![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
-[![Claude Code](https://img.shields.io/badge/Claude%20Code-Powered-blueviolet)](https://claude.ai/claude-code)
-[![Tools](https://img.shields.io/badge/analysis%20tools-11-green.svg)](#11-production-ready-analysis-tools)
-[![Agents](https://img.shields.io/badge/AI%20agents-8-orange.svg)](#what-i-built)
-[![License](https://img.shields.io/badge/license-Private-red.svg)](#security--privacy)
+<h1 align="center">Finance Guru™</h1>
 
-**Stop juggling 10 browser tabs for financial analysis. One command activates 8 AI specialists who work together as your private family office.**
+<p align="center">
+  <strong>Stop juggling 10 browser tabs for financial analysis.<br>One command activates 8 AI specialists who work together as your private family office.</strong>
+</p>
 
-![Architecture](docs/images/finance-guru-architecture.png)
+<p align="center">
+  <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.12+-blue.svg" alt="Python 3.12+"></a>
+  <a href="https://claude.ai/claude-code"><img src="https://img.shields.io/badge/Claude%20Code-Powered-blueviolet" alt="Claude Code"></a>
+  <a href="#11-production-ready-analysis-tools"><img src="https://img.shields.io/badge/analysis%20tools-11-green.svg" alt="Tools"></a>
+  <a href="#what-i-built"><img src="https://img.shields.io/badge/AI%20agents-8-orange.svg" alt="Agents"></a>
+  <a href="#security--privacy"><img src="https://img.shields.io/badge/license-Private-red.svg" alt="License"></a>
+</p>
+
+<p align="center">
+  <img src="docs/images/finance-guru-architecture.png" alt="Architecture" width="800"/>
+</p>
 
 ---
 
