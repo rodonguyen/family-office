@@ -93,3 +93,16 @@ scripts/google-sheets/portfolio-optimizer/
 
 # Private scripts
 scripts/
+
+# Private session data and conversations
+.claude/data/sessions/
+
+# Private issue tracking data
+.beads/issues.jsonl
+.beads/interactions.jsonl
+
+# Private Finance Guru data (personal financial details)
+fin-guru/data/
+
+# Private docs (buy tickets, analysis, strategies)
+docs/
