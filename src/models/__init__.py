@@ -12,6 +12,7 @@ Available Models:
     - backtest_inputs: Backtesting models (BacktestConfig, TradeSignal, BacktestResults, etc.)
     - moving_avg_inputs: Moving average models (MovingAverageDataInput, MovingAverageOutput, etc.)
     - portfolio_inputs: Portfolio optimization models (PortfolioDataInput, OptimizationOutput, etc.)
+    - itc_risk_inputs: ITC Risk API models (ITCRiskRequest, RiskBand, ITCRiskResponse)
 """
 
 from src.models.risk_inputs import (
@@ -73,6 +74,12 @@ from src.models.portfolio_inputs import (
     EfficientFrontierOutput,
 )
 
+from src.models.itc_risk_inputs import (
+    ITCRiskRequest,
+    RiskBand,
+    ITCRiskResponse,
+)
+
 __all__ = [
     # Risk models
     "PriceDataInput",
@@ -119,4 +126,8 @@ __all__ = [
     "OptimizationConfig",
     "OptimizationOutput",
     "EfficientFrontierOutput",
+    # ITC Risk models
+    "ITCRiskRequest",
+    "RiskBand",
+    "ITCRiskResponse",
 ]
