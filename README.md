@@ -121,6 +121,9 @@ curl -fsSL https://claude.ai/install.sh | bash
 # Python 3.12+ with uv package manager
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
+# Docker (required for Google Drive MCP)
+# Install from https://docs.docker.com/get-docker/
+
 # Google Drive MCP Server (for portfolio syncing)
 git clone https://github.com/AojdevStudio/gdrive.git
 cd gdrive && npm install && npm run build
