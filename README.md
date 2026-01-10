@@ -82,10 +82,10 @@ Different agents use different tools for their specialization:
 
 | Agent | Primary Tools |
 |-------|--------------|
-| **Market Researcher** | Technical Screener, Momentum, Moving Averages, Data Validator |
-| **Quant Analyst** | Risk Metrics, Factor Analysis, Correlation, Volatility, Options |
-| **Strategy Advisor** | Portfolio Optimizer, Backtester, Technical Screener |
-| **Compliance Officer** | Risk Metrics, Data Validator, Volatility (position limits) |
+| **Market Researcher** | Technical Screener, Momentum, Moving Averages, Data Validator, ITC Risk |
+| **Quant Analyst** | Risk Metrics, Factor Analysis, Correlation, Volatility, Options, ITC Risk |
+| **Strategy Advisor** | Portfolio Optimizer, Backtester, Technical Screener, ITC Risk |
+| **Compliance Officer** | Risk Metrics, Data Validator, Volatility (position limits), ITC Risk |
 | **Margin Specialist** | Volatility, Options Greeks, Risk Metrics (Beta, VaR) |
 | **Dividend Specialist** | Correlation (portfolio construction), Risk Metrics |
 
@@ -95,11 +95,18 @@ Different agents use different tools for their specialization:
 family-office/
 │
 ├── src/                   # Python modules for analysis
-│   ├── analysis/          # Risk, factors, correlation, options
+│   ├── analysis/          # Risk, factors, correlation, options, ITC Risk integration
 │   ├── strategies/        # Backtester, optimizer
 │   ├── utils/             # Momentum, volatility, screener, validators
 │   └── models/            # Pydantic models for all tools
-├── scripts/               # Financial parsing & automation
+├── scripts/               # Financial automation & reporting
+│   ├── reports/           # Report generation scripts (21 templates)
+│   ├── simulations/       # Monte Carlo & DRIP simulations (5 scripts)
+│   ├── data/              # Data processing & utilities
+│   ├── utils/             # Utility scripts (monthly refresh, automation)
+│   ├── rbp/               # RBP execution framework
+│   ├── google-sheets/     # Google Apps Script code
+│   └── archive/           # Legacy/unused scripts
 ├── notebooks/             # Jupyter analysis notebooks
 ├── docs/                  # My financial documents & summaries
 │   ├── fin-guru/          # Generated analyses
@@ -149,7 +156,10 @@ uv run python src/utils/data_validator_cli.py TSLA --days 90
 # 2. Assess risk profile
 uv run python src/analysis/risk_metrics_cli.py TSLA --days 90 --benchmark SPY
 
-# 3. Check momentum and trend
+# 3. Check market-implied risk (ITC Risk Models)
+uv run python src/analysis/itc_risk_cli.py TSLA --universe tradfi
+
+# 4. Check momentum and trend
 uv run python src/utils/momentum_cli.py TSLA --days 90
 uv run python src/utils/moving_averages_cli.py TSLA --days 252 --fast 50 --slow 200
 ```
@@ -231,7 +241,7 @@ This system is built with educational explanations throughout:
 - **Finance Guru™**: v2.0.0
 - **BMAD-CORE™**: v6.0.0
 - **Tools Built**: 11 of 11 (Complete Suite)
-- **Last Updated**: 2025-10-13
+- **Last Updated**: 2026-01-09
 
 ---
 
