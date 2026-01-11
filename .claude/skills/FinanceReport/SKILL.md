@@ -30,7 +30,7 @@ User: "Generate a report for NVDA"
 -> Runs quant tools (risk_metrics, momentum, volatility)
 -> Fetches sentiment via Perplexity MCP
 -> Builds 8-10 page PDF with VGT-style header
--> Saves to docs/fin-guru/analysis/reports/NVDA-analysis-2025-12-18.pdf
+-> Saves to fin-guru-private/fin-guru/analysis/reports/NVDA-analysis-2025-12-18.pdf
 ```
 
 **Example 2: Regenerate all watchlist reports**
@@ -151,7 +151,7 @@ uv run python .claude/skills/FinanceReport/tools/ChartKit.py \
 uv run python .claude/skills/FinanceReport/tools/ReportGenerator.py \
   --ticker TSLA \
   --portfolio-value 250000 \
-  --output-dir docs/fin-guru/analysis/reports/
+  --output-dir fin-guru-private/fin-guru/analysis/reports/
 ```
 
 ## Integration Points

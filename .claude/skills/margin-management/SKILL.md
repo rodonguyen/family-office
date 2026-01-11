@@ -349,8 +349,8 @@ mcp__gdrive__sheets(
 ## Reference Files
 
 For complete strategy details, see:
-- **Margin Strategy**: `docs/fin-guru/strategies/active/margin-living-master-strategy.md`
-- **Portfolio Strategy**: `docs/fin-guru/strategies/active/portfolio-master-strategy.md`
+- **Margin Strategy**: `fin-guru-private/fin-guru/strategies/active/margin-living-master-strategy.md`
+- **Portfolio Strategy**: `fin-guru-private/fin-guru/strategies/active/portfolio-master-strategy.md`
 - **User Profile**: `fin-guru/data/user-profile.yaml`
 - **Spreadsheet Architecture**: `fin-guru/data/spreadsheet-architecture.md`
 

@@ -11,18 +11,18 @@ knowledge_base:
 ## File Policy
 
 file_policy:
-  base_repository: "docs/fin-guru"
+  base_repository: "fin-guru-private/fin-guru"
 
   directories:
-    strategies: "docs/fin-guru/strategies"
+    strategies: "fin-guru-private/fin-guru/strategies"
     models: "src/models/"
-    reports: "docs/fin-guru/reports"
-    analysis: "docs/fin-guru/analysis"
-    tickets: "docs/fin-guru/tickets"
+    reports: "fin-guru-private/fin-guru/reports"
+    analysis: "fin-guru-private/fin-guru/analysis"
+    tickets: "fin-guru-private/fin-guru/tickets"
 
   rules:
-    - "Always save artifacts to docs/fin-guru/; never write outside"
-    - "Default save path for new artifacts: docs/fin-guru/reports/"
+    - "Always save artifacts to fin-guru-private/fin-guru/; never write outside"
+    - "Default save path for new artifacts: fin-guru-private/fin-guru/reports/"
     - "Use descriptive filenames with timestamps for reports"
     - "Follow naming conventions: {topic}-{YYYY-MM-DD}.md"
     - "Note: logs/ directory contains Claude Code hooks, not Finance Guru audit trails"
@@ -30,7 +30,7 @@ file_policy:
 ## Directory Structure
 
 directory_structure:
-  docs/fin-guru:
+  fin-guru-private/fin-guru:
     - strategies/: "# Strategic planning documents (master strategies, active plans)"
     - reports/: "# Monthly market reviews, intelligence reports"
     - analysis/: "# Deep research, Monte Carlo simulations, modeling"

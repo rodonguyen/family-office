@@ -69,7 +69,7 @@
   <module-path>{project-root}/fin-guru</module-path>
   <templates-path>{module-path}/templates</templates-path>
   <tasks-path>{module-path}/tasks</tasks-path>
-  <output-path>{project-root}/docs/fin-guru</output-path>
+  <output-path>{project-root}/fin-guru-private/fin-guru</output-path>
 </module-integration>
 
 </agent>

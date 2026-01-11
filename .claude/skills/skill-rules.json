@@ -69,7 +69,7 @@
             "fileTriggers": {
                 "pathPatterns": [
                     "fin-guru/data/*dividend*.md",
-                    "docs/fin-guru/strategies/active/*dividend*.md",
+                    "fin-guru-private/fin-guru/strategies/active/*dividend*.md",
                     "fin-guru/data/user-profile.yaml"
                 ]
             }
@@ -103,7 +103,7 @@
                 "pathPatterns": [
                     "notebooks/updates/Balances_for_Account_*.csv",
                     "fin-guru/data/*margin*.md",
-                    "docs/fin-guru/strategies/active/*margin*.md"
+                    "fin-guru-private/fin-guru/strategies/active/*margin*.md"
                 ]
             }
         },
@@ -201,8 +201,8 @@
             },
             "fileTriggers": {
                 "pathPatterns": [
-                    "docs/fin-guru/analysis/reports/*.pdf",
-                    "docs/fin-guru/analysis/*watchlist*.md",
+                    "fin-guru-private/fin-guru/analysis/reports/*.pdf",
+                    "fin-guru-private/fin-guru/analysis/*watchlist*.md",
                     "scripts/reports/generate_*_report.py"
                 ]
             }

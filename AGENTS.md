@@ -126,12 +126,12 @@ done
 # Save to file for report generation
 uv run python src/analysis/risk_metrics_cli.py TSLA --days 90 \
     --output json \
-    --save-to docs/fin-guru/risk-analysis-tsla-$(date +%Y-%m-%d).json
+    --save-to fin-guru-private/fin-guru/risk-analysis-tsla-$(date +%Y-%m-%d).json
 ```
 
 **Available Metrics**: VaR (95%), CVaR, Sharpe Ratio, Sortino Ratio, Max Drawdown, Calmar Ratio, Annual Volatility, Beta, Alpha
 
-**Documentation**: `docs/guides/risk-metrics-tool-guide.md`
+**Documentation**: `fin-guru-private/guides/risk-metrics-tool-guide.md`
 
 ### Momentum Indicators
 ```bash
@@ -306,7 +306,7 @@ uv run python src/strategies/optimizer_cli.py TSLA PLTR NVDA SPY --days 252 --me
 ## Document Output
 
 All generated analyses should be saved to:
-- Primary: `docs/fin-guru/analysis/`
+- Primary: `fin-guru-private/fin-guru/analysis/`
 - Format: Markdown with YAML frontmatter
 - Naming: `{topic}-{strategy/analysis}-{YYYY-MM-DD}.md`
 - Include: Date stamp, disclaimer, source citations

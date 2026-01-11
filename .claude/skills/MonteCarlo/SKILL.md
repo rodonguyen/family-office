@@ -22,14 +22,14 @@ User: "Run the monte carlo simulation with current portfolio"
 -> Invokes RunSimulation workflow
 -> Auto-detects portfolio values from notebooks/updates/Portfolio_Positions_*.csv
 -> Runs 10,000 scenarios with v3.0 4-layer model
--> Outputs JSON summary + full CSV + Excel to docs/fin-guru/analysis/
+-> Outputs JSON summary + full CSV + Excel to fin-guru-private/fin-guru/analysis/
 ```
 
 **Example 2: Incorporate a buy ticket into simulation**
 ```
 User: "Run monte carlo with my new buy ticket from 12-31"
 -> Invokes IncorporateBuyTicket workflow
--> Reads buy ticket from docs/fin-guru/tickets/buy-ticket-2025-12-31-*.md
+-> Reads buy ticket from fin-guru-private/fin-guru/tickets/buy-ticket-2025-12-31-*.md
 -> Adjusts starting portfolio values based on ticket allocations
 -> Runs simulation with updated positions
 ```
@@ -65,7 +65,7 @@ User: "What's my margin call probability?"
 
 ## Output Files
 
-All outputs saved to `docs/fin-guru/analysis/`:
+All outputs saved to `fin-guru-private/fin-guru/analysis/`:
 - `monte-carlo-v3-{date}.json` - Summary statistics
 - `monte-carlo-v3-full-results-{date}.csv` - All 10,000 scenarios
 - `monte-carlo-v3-analysis-{date}.xlsx` - Excel workbook with charts

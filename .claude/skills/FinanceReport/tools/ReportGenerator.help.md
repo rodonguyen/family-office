@@ -19,7 +19,7 @@ uv run python ReportGenerator.py --ticker TICKER [OPTIONS]
 | Argument | Default | Description |
 |----------|---------|-------------|
 | `--portfolio-value` | 250000 | Portfolio value for position sizing |
-| `--output-dir` | docs/fin-guru/analysis/reports | Output directory |
+| `--output-dir` | fin-guru-private/fin-guru/analysis/reports | Output directory |
 
 ## Examples
 

@@ -52,7 +52,7 @@ modes:
     execution_policy:
       - "Use uv run python src/{tool} {ticker} [flags]"
       - "Check tool documentation in CLAUDE.md or tool --help for flags"
-      - "Save outputs to docs/fin-guru/reports/ or docs/fin-guru/analysis/"
+      - "Save outputs to fin-guru-private/fin-guru/reports/ or fin-guru-private/fin-guru/analysis/"
       - "Summarize results clearly; cite metrics with values and dates"
     examples:
       - "uv run python src/analysis/risk_metrics_cli.py PLTR --days 252"

@@ -918,11 +918,11 @@ done
 ```bash
 # Save for handoff to Quant Analyst
 uv run python src/utils/momentum_cli.py [TICKER] --days 90 \
-  --save-to docs/fin-guru/momentum-[TICKER]-$(date +%Y-%m-%d).json
+  --save-to fin-guru-private/fin-guru/momentum-[TICKER]-$(date +%Y-%m-%d).json
 
 # Save risk profile for strategy development
 uv run python src/analysis/risk_metrics_cli.py [TICKER] --days 252 --benchmark SPY \
-  --save-to docs/fin-guru/risk-[TICKER]-$(date +%Y-%m-%d).json
+  --save-to fin-guru-private/fin-guru/risk-[TICKER]-$(date +%Y-%m-%d).json
 ```
 
 ### Research Notes

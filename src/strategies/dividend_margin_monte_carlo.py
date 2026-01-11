@@ -739,7 +739,7 @@ if __name__ == '__main__':
     print("="*80)
 
     # Save results
-    output_path = 'docs/fin-guru/analysis/monte-carlo-v3-2026-01-02.json'
+    output_path = 'fin-guru-private/fin-guru/analysis/monte-carlo-v3-2026-01-02.json'
     with open(output_path, 'w') as f:
         json.dump(summary, f, indent=2)
     print(f"\nDetailed results saved to: {output_path}")
@@ -752,6 +752,6 @@ if __name__ == '__main__':
         'margin_call_triggered', 'backstop_used', 'backstop_amount_used',
         'break_even_month', 'margin_payoff_month', 'total_dividends_collected'
     ]
-    csv_path = 'docs/fin-guru/analysis/monte-carlo-v3-full-results-2026-01-02.csv'
+    csv_path = 'fin-guru-private/fin-guru/analysis/monte-carlo-v3-full-results-2026-01-02.csv'
     results_df[csv_columns].to_csv(csv_path, index=False)
     print(f"Full scenario data saved to: {csv_path}")

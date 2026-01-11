@@ -53,7 +53,7 @@ for ticker in ["CRWD", "BRKB", "APLD", "IREN", "GOOG", "MSFT", "SOFI", "VTV"]:
            - Build comprehensive 8-10 page report
            - Use VGT-style header
            - Include all quant data
-           - Save to docs/fin-guru/analysis/reports/{ticker}-analysis-2025-12-18.pdf
+           - Save to fin-guru-private/fin-guru/analysis/reports/{ticker}-analysis-2025-12-18.pdf
 
         Follow the FinanceReport skill workflows.
         Replace existing PDF if present.
@@ -76,17 +76,17 @@ After all subagents complete:
 
 ```bash
 # Check all reports exist
-ls -la docs/fin-guru/analysis/reports/*.pdf
+ls -la fin-guru-private/fin-guru/analysis/reports/*.pdf
 
 # Verify file sizes
-for f in docs/fin-guru/analysis/reports/*.pdf; do
+for f in fin-guru-private/fin-guru/analysis/reports/*.pdf; do
     echo "$f: $(stat -f%z "$f") bytes"
 done
 ```
 
 ### Step 5: Update Watchlist Document (Optional)
 
-Update `docs/fin-guru/analysis/2026-watchlist-2025-12-18.md` with:
+Update `fin-guru-private/fin-guru/analysis/2026-watchlist-2025-12-18.md` with:
 - Verdict summaries for each ticker
 - Links to PDF reports
 - Consolidated recommendations
@@ -125,5 +125,5 @@ ALL_TICKERS = BATCH_1 + BATCH_2  # 17 total
 
 ## Output
 
-All PDFs saved to: `docs/fin-guru/analysis/reports/`
+All PDFs saved to: `fin-guru-private/fin-guru/analysis/reports/`
 File pattern: `{TICKER}-analysis-{YYYY-MM-DD}.pdf`

@@ -168,7 +168,7 @@ class FinanceGuruReport:
         self,
         ticker: str,
         portfolio_value: float = 250000,
-        output_dir: str = "docs/fin-guru/analysis/reports"
+        output_dir: str = "fin-guru-private/fin-guru/analysis/reports"
     ):
         self.ticker = ticker
         self.portfolio_value = portfolio_value
@@ -696,7 +696,7 @@ Examples:
     parser.add_argument('--ticker', type=str, required=True, help='Stock ticker symbol')
     parser.add_argument('--portfolio-value', type=float, default=250000,
                        help='Portfolio value for sizing (default: 250000)')
-    parser.add_argument('--output-dir', type=str, default='docs/fin-guru/analysis/reports',
+    parser.add_argument('--output-dir', type=str, default='fin-guru-private/fin-guru/analysis/reports',
                        help='Output directory for PDF')
 
     args = parser.parse_args()

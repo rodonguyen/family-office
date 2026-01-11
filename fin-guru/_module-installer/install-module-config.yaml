@@ -21,7 +21,7 @@ install_steps:
       - '{project-root}/fin-guru/data'
       - '{project-root}/fin-guru/checklists'
       - '{project-root}/fin-guru/framework'
-      - '{project-root}/docs/fin-guru'
+      - '{project-root}/fin-guru-private/fin-guru'
 
   - name: 'Copy module configuration'
     action: 'copy'

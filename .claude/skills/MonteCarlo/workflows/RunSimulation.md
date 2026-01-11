@@ -63,8 +63,8 @@ uv run python src/strategies/dividend_margin_monte_carlo.py
 
 This produces:
 - Console output with summary statistics
-- `docs/fin-guru/analysis/monte-carlo-v3-{date}.json`
-- `docs/fin-guru/analysis/monte-carlo-v3-full-results-{date}.csv`
+- `fin-guru-private/fin-guru/analysis/monte-carlo-v3-{date}.json`
+- `fin-guru-private/fin-guru/analysis/monte-carlo-v3-full-results-{date}.csv`
 
 ### Step 5: Generate Excel Workbook
 
@@ -75,7 +75,7 @@ uv run python scripts/simulations/monte_carlo_excel_export.py
 ```
 
 This produces:
-- `docs/fin-guru/analysis/monte-carlo-v3-analysis-{date}.xlsx`
+- `fin-guru-private/fin-guru/analysis/monte-carlo-v3-analysis-{date}.xlsx`
 
 ### Step 6: Report Results
 
@@ -105,9 +105,9 @@ Present key metrics to the user:
 
 ## Output Files
 
-- JSON summary: `docs/fin-guru/analysis/monte-carlo-v3-{simulation_date}.json`
-- Full scenarios: `docs/fin-guru/analysis/monte-carlo-v3-full-results-{simulation_date}.csv`
-- Excel analysis: `docs/fin-guru/analysis/monte-carlo-v3-analysis-{simulation_date}.xlsx`
+- JSON summary: `fin-guru-private/fin-guru/analysis/monte-carlo-v3-{simulation_date}.json`
+- Full scenarios: `fin-guru-private/fin-guru/analysis/monte-carlo-v3-full-results-{simulation_date}.csv`
+- Excel analysis: `fin-guru-private/fin-guru/analysis/monte-carlo-v3-analysis-{simulation_date}.xlsx`
 
 ## Layer Classification Reference
 

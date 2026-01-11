@@ -128,7 +128,7 @@ compliance_required: true
 educational_only: true
 
 # Output Configuration
-output_folder: "{project-root}/docs/fin-guru"
+output_folder: "{project-root}/fin-guru-private/fin-guru"
 data_folder: "{module_root}/data"
 templates_folder: "{module_root}/templates"
 

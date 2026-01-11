@@ -13,16 +13,16 @@ Use this workflow when the user wants to:
 
 ### Step 1: Find the Buy Ticket
 
-Search for buy tickets in `docs/fin-guru/tickets/`:
+Search for buy tickets in `fin-guru-private/fin-guru/tickets/`:
 
 ```bash
-ls -la docs/fin-guru/tickets/buy-ticket-*.md
+ls -la fin-guru-private/fin-guru/tickets/buy-ticket-*.md
 ```
 
 If user specifies a date (e.g., "12-31"), find the matching ticket:
 
 ```bash
-ls docs/fin-guru/tickets/buy-ticket-*12-31*.md 2>/dev/null || ls docs/fin-guru/tickets/buy-ticket-2025-12-31*.md 2>/dev/null
+ls fin-guru-private/fin-guru/tickets/buy-ticket-*12-31*.md 2>/dev/null || ls fin-guru-private/fin-guru/tickets/buy-ticket-2025-12-31*.md 2>/dev/null
 ```
 
 ### Step 2: Parse the Buy Ticket
@@ -103,7 +103,7 @@ Note in the output that this simulation includes the buy ticket:
 
 **Workflow Execution:**
 
-1. Find ticket: `docs/fin-guru/tickets/buy-ticket-2025-12-31-w2-payroll.md`
+1. Find ticket: `fin-guru-private/fin-guru/tickets/buy-ticket-2025-12-31-w2-payroll.md`
 
 2. Parse allocations:
    - JEPI: $500

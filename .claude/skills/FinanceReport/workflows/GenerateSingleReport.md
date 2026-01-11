@@ -59,7 +59,7 @@ Based on user profile ($250k default):
 uv run python .claude/skills/FinanceReport/tools/ReportGenerator.py \
   --ticker {TICKER} \
   --portfolio-value 250000 \
-  --output-dir docs/fin-guru/analysis/reports/
+  --output-dir fin-guru-private/fin-guru/analysis/reports/
 ```
 
 Or programmatically build sections:
@@ -99,7 +99,7 @@ output_path = report.build()
 
 ## Output
 
-PDF saved to: `docs/fin-guru/analysis/reports/{TICKER}-analysis-{YYYY-MM-DD}.pdf`
+PDF saved to: `fin-guru-private/fin-guru/analysis/reports/{TICKER}-analysis-{YYYY-MM-DD}.pdf`
 
 ## Error Handling
 
@@ -127,5 +127,5 @@ User: "Generate a report for NVDA"
    → 2.5% = $6,250 = ~45 shares at $138
 
 5. Generate PDF
-   → docs/fin-guru/analysis/reports/NVDA-analysis-2025-12-18.pdf (32KB)
+   → fin-guru-private/fin-guru/analysis/reports/NVDA-analysis-2025-12-18.pdf (32KB)
 ```

@@ -4,7 +4,7 @@
 - **Location**: `src/analysis/risk_metrics_cli.py`
 - **Models**: `src/models/risk_inputs.py`
 - **Calculator**: `src/analysis/risk_metrics.py`
-- **Documentation**: `docs/guides/risk-metrics-tool-guide.md`
+- **Documentation**: `fin-guru-private/guides/risk-metrics-tool-guide.md`
 - **Metrics**: VaR, CVaR, Sharpe, Sortino, Max Drawdown, Calmar, Volatility, Beta, Alpha
 - **Usage**: See "Risk Metrics Analysis" section above
 

@@ -859,11 +859,11 @@ uv run python src/analysis/risk_metrics_cli.py [TICKER] --days 252 --confidence 
 ```bash
 # Document risk profile
 uv run python src/analysis/risk_metrics_cli.py [TICKER] --days 252 --benchmark SPY \
-  --save-to docs/fin-guru/strategy-risk-[TICKER]-$(date +%Y-%m-%d).json
+  --save-to fin-guru-private/fin-guru/strategy-risk-[TICKER]-$(date +%Y-%m-%d).json
 
 # Document timing analysis
 uv run python src/utils/momentum_cli.py [TICKER] --days 90 \
-  --save-to docs/fin-guru/strategy-momentum-[TICKER]-$(date +%Y-%m-%d).json
+  --save-to fin-guru-private/fin-guru/strategy-momentum-[TICKER]-$(date +%Y-%m-%d).json
 ```
 
 ### Strategic Guidelines

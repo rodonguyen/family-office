@@ -234,5 +234,5 @@ PHASE 3: Strategy
 └─ Entry: Scale-in over 2 weeks
 
 PHASE 4: Report
-└─ Output: docs/fin-guru/analysis/reports/AMZN-analysis-2025-12-18.pdf (35KB)
+└─ Output: fin-guru-private/fin-guru/analysis/reports/AMZN-analysis-2025-12-18.pdf (35KB)
 ```

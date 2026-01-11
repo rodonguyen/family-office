@@ -285,8 +285,8 @@ mcp__gdrive__sheets(
 ## Reference Files
 
 For complete details, see:
-- **Dividend Strategy**: `docs/fin-guru/strategies/active/dividend-income-master-strategy.md`
-- **Portfolio Strategy**: `docs/fin-guru/strategies/active/portfolio-master-strategy.md`
+- **Dividend Strategy**: `fin-guru-private/fin-guru/strategies/active/dividend-income-master-strategy.md`
+- **Portfolio Strategy**: `fin-guru-private/fin-guru/strategies/active/portfolio-master-strategy.md`
 - **User Profile**: `fin-guru/data/user-profile.yaml`
 - **Spreadsheet Architecture**: `fin-guru/data/spreadsheet-architecture.md`
 
