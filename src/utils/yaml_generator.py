@@ -288,6 +288,20 @@ class YAMLGenerator:
         prepared_data = self._prepare_user_data(data)
         return self._process_template(template, prepared_data)
 
+    def generate_mcp_json(self, data: UserDataInput) -> str:
+        """
+        Generate MCP server configuration JSON from template.
+
+        Args:
+            data: Validated user data
+
+        Returns:
+            Generated MCP JSON content
+        """
+        template = self._load_template("mcp", "json")
+        prepared_data = self._prepare_user_data(data)
+        return self._process_template(template, prepared_data)
+
     def generate_all_configs(self, data: UserDataInput) -> YAMLGenerationOutput:
         """
         Generate all configuration files.
@@ -304,6 +318,7 @@ class YAMLGenerator:
             system_context_md=self.generate_system_context(data),
             claude_md=self.generate_claude_md(data),
             env_file=self.generate_env(data),
+            mcp_json=self.generate_mcp_json(data),
             generation_date=date.today(),
             user_name=data.identity.user_name,
         )
@@ -326,6 +341,7 @@ def write_config_files(output: YAMLGenerationOutput, base_dir: str = ".") -> Non
         base_path / "fin-guru" / "data" / "system-context.md": output.system_context_md,
         base_path / "CLAUDE.md": output.claude_md,
         base_path / ".env": output.env_file,
+        base_path / ".claude" / "mcp.json": output.mcp_json,
     }
 
     # Write files

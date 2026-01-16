@@ -1,0 +1,46 @@
+{
+  "mcpServers": {
+    "exa": {
+      "command": "npx",
+      "args": ["-y", "@exa/mcp-server"],
+      "description": "AI-powered search (required)"
+    },
+    "perplexity": {
+      "command": "npx",
+      "args": ["-y", "@perplexity/mcp-server"],
+      "description": "Research and reasoning (required)"
+    },
+    "gdrive": {
+      "command": "npx",
+      "args": ["-y", "@google/gdrive-mcp"],
+      "description": "Google Sheets integration (required)"
+    },
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@context7/mcp-server"],
+      "description": "Library documentation (optional)"
+    }{{#if has_alphavantage}},
+    "financial-datasets": {
+      "command": "npx",
+      "args": ["-y", "@financial-datasets/mcp-server"],
+      "env": {
+        "ALPHA_VANTAGE_API_KEY": "{{alphavantage_key}}"
+      },
+      "description": "Market data with Alpha Vantage API"
+    }{{/if}}{{#if has_brightdata}},
+    "bright-data": {
+      "command": "npx",
+      "args": ["-y", "@bright-data/mcp-server"],
+      "env": {
+        "BRIGHT_DATA_API_KEY": "{{brightdata_key}}"
+      },
+      "description": "Web scraping (paid service)"
+    }{{/if}}
+  },
+  "_meta": {
+    "generated_by": "Finance Guru™ Onboarding",
+    "generated_at": "{{timestamp}}",
+    "user": "{{user_name}}",
+    "version": "1.0.0"
+  }
+}

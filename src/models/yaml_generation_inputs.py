@@ -206,5 +206,6 @@ class YAMLGenerationOutput(BaseModel):
     )
     claude_md: str = Field(..., description="Generated CLAUDE.md content")
     env_file: str = Field(..., description="Generated .env file content")
+    mcp_json: str = Field(..., description="Generated MCP configuration JSON content")
     generation_date: date = Field(..., description="Date of generation")
     user_name: str = Field(..., description="User name from input")
