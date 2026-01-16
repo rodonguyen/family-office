@@ -1,0 +1,223 @@
+{
+  "broker": "Fidelity Investments",
+  "status": "fully_supported",
+  "last_updated": "2026-01-16",
+  "positions_csv": {
+    "file_pattern": "Portfolio_Positions_*.csv",
+    "required_columns": {
+      "symbol": {
+        "fidelity_column": "Symbol",
+        "data_type": "string",
+        "example": "TSLA",
+        "notes": "Stock ticker symbol"
+      },
+      "quantity": {
+        "fidelity_column": "Quantity",
+        "data_type": "number",
+        "example": "74",
+        "notes": "Number of shares owned"
+      },
+      "average_cost_basis": {
+        "fidelity_column": "Average Cost Basis",
+        "data_type": "currency",
+        "example": "$234.19",
+        "notes": "Average purchase price per share"
+      }
+    },
+    "optional_columns": {
+      "last_price": {
+        "fidelity_column": "Last Price",
+        "data_type": "currency",
+        "example": "$448.96"
+      },
+      "current_value": {
+        "fidelity_column": "Current Value",
+        "data_type": "currency",
+        "example": "$33223.04"
+      },
+      "total_gain_loss_dollar": {
+        "fidelity_column": "Total Gain/Loss Dollar",
+        "data_type": "currency",
+        "example": "+$15892.97"
+      },
+      "total_gain_loss_percent": {
+        "fidelity_column": "Total Gain/Loss Percent",
+        "data_type": "percentage",
+        "example": "+91.70%"
+      },
+      "percent_of_account": {
+        "fidelity_column": "Percent Of Account",
+        "data_type": "percentage",
+        "example": "13.18%"
+      },
+      "type": {
+        "fidelity_column": "Type",
+        "data_type": "string",
+        "example": "Margin",
+        "notes": "Cash or Margin position"
+      }
+    },
+    "header_row": 1,
+    "data_starts_row": 2,
+    "encoding": "utf-8-sig",
+    "delimiter": ",",
+    "example_header": "Account Number,Account Name,Investment Type,Symbol,Description,Quantity,Last Price,Last Price Change,Current Value,Today's Gain/Loss Dollar,Today's Gain/Loss Percent,Total Gain/Loss Dollar,Total Gain/Loss Percent,Percent Of Account,Cost Basis Total,Average Cost Basis,Type"
+  },
+  "balances_csv": {
+    "file_pattern": "Balances_for_Account_*.csv",
+    "format": "key_value_pairs",
+    "required_fields": {
+      "settled_cash": {
+        "fidelity_key": "Settled cash",
+        "data_type": "currency",
+        "example": "$0.00",
+        "notes": "Available cash balance"
+      },
+      "net_debit": {
+        "fidelity_key": "Net debit",
+        "data_type": "currency",
+        "example": "$(7822.71)",
+        "notes": "Margin debt (negative value)"
+      },
+      "account_equity_percentage": {
+        "fidelity_key": "Account equity percentage",
+        "data_type": "percentage",
+        "example": "97.87%",
+        "notes": "Non-margin percentage"
+      },
+      "total_account_value": {
+        "fidelity_key": "Total account value",
+        "data_type": "currency",
+        "example": "252103.3",
+        "notes": "Total portfolio value"
+      }
+    },
+    "optional_fields": {
+      "margin_buying_power": {
+        "fidelity_key": "Margin buying power",
+        "data_type": "currency"
+      },
+      "non_margin_buying_power": {
+        "fidelity_key": "Non-margin buying power",
+        "data_type": "currency"
+      },
+      "margin_interest_accrued": {
+        "fidelity_key": "Margin interest accrued this month",
+        "data_type": "currency"
+      }
+    },
+    "header_row": 1,
+    "format_notes": "Two-column format: first column is field name, second column is value. Commas as delimiters.",
+    "example_rows": [
+      ",Balance,Day change",
+      "Total account value,252103.3,-818.25",
+      "Account equity percentage,97.87%,"
+    ]
+  },
+  "transaction_history_csv": {
+    "file_pattern": "History_for_Account_*.csv",
+    "required_columns": {
+      "run_date": {
+        "fidelity_column": "Run Date",
+        "data_type": "date",
+        "example": "12/18/2025"
+      },
+      "action": {
+        "fidelity_column": "Action",
+        "data_type": "string",
+        "example": "DIVIDEND RECEIVED",
+        "notes": "BUY, SELL, DIVIDEND RECEIVED, DEBIT CARD PURCHASE, etc."
+      },
+      "symbol": {
+        "fidelity_column": "Symbol",
+        "data_type": "string",
+        "example": "JEPI",
+        "notes": "May be empty for non-security transactions"
+      },
+      "description": {
+        "fidelity_column": "Description",
+        "data_type": "string",
+        "example": "H-E-B #458"
+      },
+      "amount": {
+        "fidelity_column": "Amount ($)",
+        "data_type": "currency",
+        "example": "$51.63"
+      },
+      "cash_balance": {
+        "fidelity_column": "Cash Balance ($)",
+        "data_type": "currency",
+        "example": "$0.00"
+      }
+    },
+    "optional_columns": {
+      "quantity": {
+        "fidelity_column": "Quantity",
+        "data_type": "number"
+      },
+      "price": {
+        "fidelity_column": "Price ($)",
+        "data_type": "currency"
+      },
+      "commission": {
+        "fidelity_column": "Commission ($)",
+        "data_type": "currency"
+      },
+      "fees": {
+        "fidelity_column": "Fees ($)",
+        "data_type": "currency"
+      }
+    }
+  },
+  "dividend_history_csv": {
+    "file_pattern": "dividend.csv",
+    "required_columns": {
+      "symbol": {
+        "fidelity_column": "Symbol",
+        "data_type": "string",
+        "example": "JEPI"
+      },
+      "quantity": {
+        "fidelity_column": "Quantity",
+        "data_type": "number",
+        "example": "72.942"
+      },
+      "amount_per_share": {
+        "fidelity_column": "Amount per share",
+        "data_type": "currency",
+        "example": "$0.7080"
+      },
+      "pay_date": {
+        "fidelity_column": "Pay date",
+        "data_type": "date",
+        "example": "01/05/2026"
+      },
+      "type": {
+        "fidelity_column": "Type",
+        "data_type": "string",
+        "example": "Cash",
+        "notes": "Cash or Margin"
+      }
+    }
+  },
+  "parsing_notes": {
+    "currency_format": "US format with $ prefix, commas for thousands, periods for decimals. Negative values use parentheses: $(7822.71)",
+    "percentage_format": "Decimal followed by % symbol: 97.87%",
+    "date_format": "MM/DD/YYYY",
+    "special_characters": "UTF-8 BOM at start of file (\\ufeff)",
+    "encoding_handling": "Use 'utf-8-sig' to automatically strip BOM"
+  },
+  "validation_rules": {
+    "positions": [
+      "Symbol must not be empty",
+      "Quantity must be positive number",
+      "Average Cost Basis must be positive number",
+      "Type must be 'Cash' or 'Margin'"
+    ],
+    "balances": [
+      "Total account value must be positive",
+      "Account equity percentage must be between 0-100%",
+      "Net debit should be negative if margin is used"
+    ]
+  }
+}
