@@ -136,12 +136,13 @@ def fetch_price_data(ticker: str, days: int, realtime: bool = False) -> PriceDat
             dates=dates,
         )
 
-    except ImportError:
-        print("ERROR: yfinance not installed. Run: uv add yfinance", file=sys.stderr)
-        sys.exit(1)
+    except ImportError as e:
+        raise ImportError("yfinance not installed. Run: uv add yfinance") from e
+    except ValueError:
+        # Re-raise ValueError as-is (from empty data or insufficient data checks)
+        raise
     except Exception as e:
-        print(f"ERROR fetching data for {ticker}: {e}", file=sys.stderr)
-        sys.exit(1)
+        raise ValueError(f"Failed to fetch data for {ticker}: {e}") from e
 
 
 def format_output_human(results: RiskMetricsOutput) -> str:
@@ -277,7 +278,7 @@ def format_output_json(results: RiskMetricsOutput) -> str:
     return results.model_dump_json(indent=2)
 
 
-def main():
+def main() -> int:
     """
     Main CLI entry point.
 
@@ -288,6 +289,9 @@ def main():
     3. Creates configuration
     4. Runs calculations
     5. Formats and displays/saves output
+
+    Returns:
+        int: Exit code (0 for success, 1 for error, 130 for user cancellation)
     """
     # Create argument parser
     parser = argparse.ArgumentParser(
@@ -385,7 +389,7 @@ Examples:
     # Validate days parameter
     if args.days < 30:
         print("ERROR: --days must be at least 30 for statistical validity", file=sys.stderr)
-        sys.exit(1)
+        return 1
 
     try:
         # Step 1: Fetch price data
@@ -434,15 +438,17 @@ Examples:
             # Print to stdout
             print(output)
 
+        return 0
+
     except KeyboardInterrupt:
         print("\n⚠️  Operation cancelled by user", file=sys.stderr)
-        sys.exit(130)
+        return 130
     except Exception as e:
         print(f"❌ ERROR: {e}", file=sys.stderr)
         import traceback
         traceback.print_exc(file=sys.stderr)
-        sys.exit(1)
+        return 1
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

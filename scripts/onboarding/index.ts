@@ -102,7 +102,7 @@ function displayComplete(): void {
   console.log('');
   console.log('Documentation:');
   console.log('  → Setup guide: docs/SETUP.md');
-  console.log('  → User guide: docs/USER-GUIDE.md');
+  console.log('  → Tools & APIs: docs/api.md');
   console.log('  → Troubleshooting: docs/TROUBLESHOOTING.md');
   console.log('');
   console.log('Ready to get started? Open Claude Code and say:');

@@ -69,7 +69,7 @@ adjusted_layer1 = current_layer1 + sum(layer1_allocations)
 
 ### Step 5: Update Simulation
 
-Update `src/strategies/dividend_margin_monte_carlo.py` with adjusted values:
+Update `fin-guru-private/strategies/dividend_margin_monte_carlo.py` with adjusted values:
 
 ```python
 # Initialize with ADJUSTED values (includes buy ticket from {ticket_date})

@@ -77,6 +77,8 @@ research/
 notebooks/
 # User's financial profile
 fin-guru/data/user-profile.yaml
+# Onboarding state (may contain sensitive configuration)
+.onboarding-state.json
 # All generated strategies and reports
 fin-guru-private/
 # Google Sheets portfolio optimizer scripts (contains sensitive portfolio logic)

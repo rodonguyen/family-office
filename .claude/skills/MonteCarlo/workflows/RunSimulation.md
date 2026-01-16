@@ -44,7 +44,7 @@ Parse the CSV to extract current values for each layer:
 
 ### Step 3: Update Simulation Starting Values
 
-Edit `src/strategies/dividend_margin_monte_carlo.py` to update the starting values in `run_single_scenario()`:
+Edit `fin-guru-private/strategies/dividend_margin_monte_carlo.py` to update the starting values in `run_single_scenario()`:
 
 ```python
 # Initialize portfolio components with ACTUAL {simulation_date} values
@@ -58,7 +58,7 @@ margin_balance = {margin_value}     # Starting margin debt
 ### Step 4: Run Simulation
 
 ```bash
-uv run python src/strategies/dividend_margin_monte_carlo.py
+uv run python fin-guru-private/strategies/dividend_margin_monte_carlo.py
 ```
 
 This produces:

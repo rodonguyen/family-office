@@ -131,12 +131,13 @@ def fetch_ma_data(ticker: str, days: int, realtime: bool = False) -> MovingAvera
             prices=prices_list,
         )
 
-    except ImportError:
-        print("ERROR: yfinance not installed. Run: uv add yfinance", file=sys.stderr)
-        sys.exit(1)
+    except ImportError as e:
+        raise ImportError("yfinance not installed. Run: uv add yfinance") from e
+    except ValueError:
+        # Re-raise ValueError as-is (from empty data or insufficient data checks)
+        raise
     except Exception as e:
-        print(f"ERROR fetching data for {ticker}: {e}", file=sys.stderr)
-        sys.exit(1)
+        raise ValueError(f"Failed to fetch data for {ticker}: {e}") from e
 
 
 def format_single_ma_output(analysis: MovingAverageAnalysis) -> str:
