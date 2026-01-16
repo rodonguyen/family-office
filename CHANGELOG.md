@@ -1,0 +1,197 @@
+# Changelog
+
+All notable changes to Finance Guru™ will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+### Added
+- Codex full review report and validation system
+- Broker CSV mapping templates for multi-broker support
+- Pre-codex validation script and reporting
+- Comprehensive testing infrastructure (Master Test Runner)
+- Integration tests: Full setup flow, Onboarding resume, Idempotent re-run
+- Manual test checklist documentation
+- Gitignore protection tests for sensitive data
+
+### Changed
+- Converted hooks to Bun runtime for better performance
+  - `load-fin-core-config` hook now uses Bun
+  - `skill-activation-prompt` hook now uses Bun
+  - `post-tool-use-tracker` hook now uses Bun
+- Enhanced setup.sh with onboarding integration
+- Improved documentation structure
+  - Enhanced SETUP.md with quick start and verification checklist
+  - Enhanced API key documentation with acquisition guide
+  - Added comprehensive troubleshooting documentation
+  - Added Fork Model README section
+
+### Fixed
+- Removed .beads/interactions.jsonl from git tracking
+- Addressed Codex P0 critical issues
+- Removed hardcoded user name references for better fork compatibility
+- Made skill-activation-prompt hook executable
+
+## [2.0.0] - 2025-10-08
+
+### Major Release
+Finance Guru™ v2.0.0 - Private AI-powered family office system built on BMAD-CORE™ v6.
+
+### Added
+
+#### Core Infrastructure
+- Multi-agent orchestration system with 8 specialized financial agents
+  - Cassandra Holt (Finance Orchestrator)
+  - Market Researcher
+  - Quant Analyst
+  - Strategy Advisor
+  - Compliance Officer
+  - Margin Specialist
+  - Dividend Specialist
+  - Tax Optimizer
+- Interactive onboarding wizard with financial assessment
+  - User profile generation system
+  - Risk tolerance configuration
+  - Strategy recommendations
+  - YAML profile generation from questionnaire responses
+  - Onboarding summary and confirmation flow
+- Session start hooks for context injection
+  - `load-fin-core-config.ts` - System configuration loader
+  - `skill-activation-prompt.ts` - Skill routing system
+  - `post-tool-use-tracker.ts` - Usage tracking
+
+#### Analysis Tools (11 Production-Ready)
+- **Risk Analysis**
+  - Risk Metrics CLI (`src/analysis/risk_metrics_cli.py`)
+    - VaR, CVaR, Sharpe Ratio, Sortino Ratio
+    - Maximum Drawdown, Calmar Ratio
+    - Beta, Alpha calculations
+  - ITC Risk CLI (`src/analysis/itc_risk_cli.py`)
+    - Market-implied risk scores
+    - Risk bands for entry/exit timing
+    - Support for crypto and TradFi universes
+- **Technical Analysis**
+  - Momentum CLI (`src/utils/momentum_cli.py`)
+    - RSI, MACD, Stochastic, Williams %R, ROC
+    - Confluence indicators
+  - Moving Averages CLI (`src/utils/moving_averages_cli.py`)
+    - SMA, EMA, WMA, HMA
+    - Golden/Death Cross detection
+  - Volatility CLI (`src/utils/volatility_cli.py`)
+    - Bollinger Bands, ATR, Historical Volatility
+    - Keltner Channels, StdDev, Regime detection
+- **Portfolio Management**
+  - Correlation CLI (`src/analysis/correlation_cli.py`)
+    - Pearson matrix, Covariance analysis
+    - Diversification scoring, Concentration metrics
+  - Portfolio Optimizer CLI (`src/strategies/optimizer_cli.py`)
+    - Max Sharpe, Risk Parity, Min Variance
+    - Mean-Variance, Black-Litterman
+  - Backtester CLI (`src/strategies/backtester_cli.py`)
+    - RSI strategy, SMA crossover, Buy-and-hold
+    - Sharpe calculation, Win rate, Drawdown tracking
+- **Options Analysis**
+  - Options Pricer CLI (`src/analysis/options_pricer_cli.py`)
+    - Black-Scholes pricing model
+    - Greeks calculation (Delta, Gamma, Theta, Vega, Rho)
+    - Implied Volatility
+
+#### Finance Guru Skills (9 Skills)
+- `fin-core` - Core Finance Guru system context loader
+- `margin-management` - Margin Dashboard integration and tracking
+- `PortfolioSyncing` - Fidelity CSV → Google Sheets synchronization
+- `MonteCarlo` - Monte Carlo simulation runner for portfolio stress testing
+- `retirement-syncing` - Retirement account sync (Vanguard/Fidelity)
+- `dividend-tracking` - Dividend data synchronization and tracking
+- `FinanceReport` - PDF analysis report generator
+- `TransactionSyncing` - Transaction history import and categorization
+- `formula-protection` - Spreadsheet formula protection system
+
+#### Architecture & Type Safety
+- 3-layer architecture pattern: Pydantic Models → Calculator Classes → CLI
+- Type-safe validation across all tools
+- Standardized CLI interface patterns
+- Comprehensive error handling and validation
+
+#### Documentation
+- Complete setup guide (SETUP.md)
+- API reference documentation (api.md)
+- Hooks system documentation (hooks.md)
+- Contributing guidelines (contributing.md)
+- API key acquisition guide (api-keys.md)
+- Troubleshooting guide (TROUBLESHOOTING.md)
+- Documentation index hub (index.md)
+
+#### Project Infrastructure
+- Automated setup script (`setup.sh`)
+  - Python virtual environment setup
+  - Dependency installation with `uv`
+  - Private directory structure creation
+  - Symlink installation for commands and skills
+  - MCP.json generation
+  - Interactive .env setup
+- Comprehensive .gitignore for financial data protection
+- Fork-friendly architecture with privacy safeguards
+- CLAUDE.md template system
+- RBP (Ralph + Beads + PAI) integration
+  - Beads workflow context
+  - Session close protocol
+  - Task tracking and management
+
+#### Testing
+- Unit tests for all calculator classes
+- CLI integration tests
+- Hook functionality tests (Bun-based)
+- Gitignore protection tests
+- Full setup flow integration tests
+- Onboarding resume tests
+- Idempotent re-run tests
+
+#### Integration & APIs
+- yfinance for market data (default, no API key required)
+- Optional Finnhub API for real-time intraday prices
+- Optional ITC Risk Models API for external risk intelligence
+- Google Drive MCP server integration for portfolio tracking
+- Perplexity MCP for AI-powered market research
+- Exa MCP for web intelligence gathering
+- Sequential-thinking MCP for complex reasoning
+
+### Technical Details
+- **Python**: 3.12+ with `uv` package manager
+- **Dependencies**: pandas, numpy, scipy, scikit-learn, yfinance, streamlit, beautifulsoup4, requests, pydantic, python-dotenv
+- **CLI Runtime**: Bun for hooks and utilities
+- **Orchestration**: Claude Code
+- **License**: GNU Affero General Public License v3.0 (AGPLv3)
+
+### Security & Privacy
+- All financial data stays local
+- .gitignore protection for sensitive files
+- No external data transmission without explicit user action
+- Private fork model for personal use
+- Session-based context with auto-cleanup
+
+### Known Limitations
+- Tools: 8/11 tools complete (per CLAUDE.md)
+- Market data limited to yfinance without API keys
+- Options Pricer uses basic Black-Scholes (no exotic options)
+- Backtester uses simple strategies (no ML-based)
+
+## Project Links
+
+- **Repository**: https://github.com/AojdevStudio/Finance-Guru
+- **Documentation**: [docs/index.md](docs/index.md)
+- **Setup Guide**: [docs/SETUP.md](docs/SETUP.md)
+- **Contributing**: [docs/contributing.md](docs/contributing.md)
+
+## Version History
+
+- **v2.0.0** (2025-10-08) - Initial major release with full agent system
+- **Unreleased** - Current development branch
+
+---
+
+**Note**: This is a private family office system. All changes are for personal use unless explicitly stated otherwise.
+
+**Educational Disclaimer**: Finance Guru™ is for educational purposes only. Not investment advice. Consult licensed professionals before making investment decisions.
