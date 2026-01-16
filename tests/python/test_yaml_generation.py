@@ -247,6 +247,14 @@ class TestConfigGeneration:
 
         assert "test-key-123" in result  # Alpha Vantage key
 
+    def test_generate_mcp_json(self, yaml_generator: YAMLGenerator, valid_user_data: UserDataInput):
+        """MCP JSON config should be generated."""
+        result = yaml_generator.generate_mcp_json(valid_user_data)
+
+        assert len(result) > 0
+        # Should be valid JSON structure
+        assert "{" in result or "mcpServers" in result
+
 
 class TestFullGeneration:
     """Test complete config generation workflow."""
@@ -266,6 +274,7 @@ class TestFullGeneration:
         assert len(output.system_context_md) > 0
         assert len(output.claude_md) > 0
         assert len(output.env_file) > 0
+        assert len(output.mcp_json) > 0
 
         # Verify user name appears in at least one output
         assert "TestUser" in output.user_profile_yaml or "TestUser" in output.config_yaml
@@ -282,6 +291,7 @@ class TestFullGeneration:
             tmp_path / "fin-guru" / "data" / "system-context.md",
             tmp_path / "CLAUDE.md",
             tmp_path / ".env",
+            tmp_path / ".claude" / "mcp.json",
         ]
 
         for file_path in expected_files:
