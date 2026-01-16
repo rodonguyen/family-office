@@ -301,6 +301,8 @@ OPENAI_API_KEY=your_openai_key_here
 
 **Note**: Finance Guru uses `yfinance` for market data by default. API keys enhance functionality but are not required.
 
+**For comprehensive API key setup instructions**, see the [API Key Acquisition Guide](api-keys.md).
+
 ### Hooks Verification
 
 Finance Guru uses hooks to auto-load context and activate skills. Verify hooks are configured:
