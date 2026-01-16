@@ -13,7 +13,8 @@ Comprehensive troubleshooting for Finance Guru™ installation, configuration, a
 7. [Onboarding Wizard](#onboarding-wizard)
 8. [Git & Privacy](#git--privacy)
 9. [Performance & Limits](#performance--limits)
-10. [Common Error Messages](#common-error-messages)
+10. [Testing & Development](#testing--development)
+11. [Common Error Messages](#common-error-messages)
 
 ---
 
@@ -286,6 +287,75 @@ uv run python src/analysis/risk_metrics_cli.py TSLA
 
 ## MCP Server Issues
 
+### MCP Launchpad Not Working
+
+**Problem**: `mcpl` command not found or not working
+
+**Symptoms**:
+```
+bash: mcpl: command not found
+# OR
+Error: Cannot connect to MCP daemon
+```
+
+**Solutions**:
+
+**Check if MCP Launchpad is installed**:
+```bash
+# Test mcpl command
+mcpl --help
+
+# If not found, check installation location
+which mcpl
+
+# Typical installation paths:
+# - /usr/local/bin/mcpl
+# - ~/.local/bin/mcpl
+# - ~/bin/mcpl
+```
+
+**Verify MCP servers in settings.json**:
+```bash
+# MCP Launchpad reads from Claude Code settings
+cat .claude/settings.json | grep -A 20 mcpServers
+
+# Should show configured servers like:
+# "mcpServers": {
+#   "exa": { ... },
+#   "gdrive": { ... }
+# }
+```
+
+**Test MCP connection**:
+```bash
+# Verify all MCP servers are working
+mcpl verify
+
+# Should show connection status for each server
+# ✓ exa - Connected
+# ✓ gdrive - Connected
+# ✗ finnhub - Connection failed
+```
+
+**Search for available tools**:
+```bash
+# Find tools across all MCP servers
+mcpl search "list projects"
+
+# Should return relevant tools with descriptions
+```
+
+**Restart MCP daemon**:
+```bash
+# Stop MCP daemon
+mcpl session stop
+
+# Daemon will auto-restart on next mcpl command
+mcpl verify
+```
+
+---
+
 ### MCP Server Not Connected
 
 **Problem**: Claude Code can't connect to MCP servers
@@ -310,6 +380,20 @@ npx -y @exa-labs/mcp-server-exa
 # Check if command is in PATH
 which npx
 # Should show path to npx
+```
+
+**Use MCP Launchpad to diagnose**:
+```bash
+# Verify which servers are connected
+mcpl verify
+
+# Check server configuration
+mcpl config
+
+# Test specific server
+mcpl list exa
+
+# Should list all exa tools if connected
 ```
 
 **Verify settings.json syntax**:
@@ -536,6 +620,90 @@ claude
 
 ## Hooks & Skills
 
+### TypeScript Hooks Failing
+
+**Problem**: Hooks written in TypeScript/Bun not executing
+
+**Symptoms**:
+```
+Error: Cannot find module 'tsx'
+# OR
+Error: bun: command not found
+# OR
+Hook execution failed with exit code 1
+```
+
+**Solutions**:
+
+**Install tsx (for npx tsx execution)**:
+```bash
+# Install tsx globally
+npm install -g tsx
+
+# Verify installation
+npx tsx --version
+
+# Test hook manually
+npx tsx .claude/hooks/load-fin-core-config.ts
+```
+
+**Install bun (for bun execution)**:
+```bash
+# Install bun
+curl -fsSL https://bun.sh/install | bash
+
+# Add to PATH (if needed)
+export PATH="$HOME/.local/bin:$PATH"
+
+# Reload shell
+source ~/.zshrc  # or source ~/.bashrc
+
+# Verify installation
+bun --version
+
+# Test hook manually
+bun .claude/hooks/load-fin-core-config.ts
+```
+
+**Check hook file permissions**:
+```bash
+# Hooks must be executable
+ls -la .claude/hooks/*.ts
+ls -la .claude/hooks/*.sh
+
+# If not executable (missing x flag)
+chmod +x .claude/hooks/load-fin-core-config.ts
+chmod +x .claude/hooks/skill-activation-prompt.ts
+chmod +x .claude/hooks/post-tool-use-tracker.ts
+chmod +x .claude/hooks/skill-activation-prompt.sh
+```
+
+**Verify settings.json format** (New Format):
+```bash
+# Check settings.json structure
+cat .claude/settings.json
+
+# Should use new nested hooks format:
+# "SessionStart": [
+#   {
+#     "hooks": [
+#       {
+#         "type": "command",
+#         "command": "npx tsx $CLAUDE_PROJECT_DIR/.claude/hooks/load-fin-core-config.ts"
+#       }
+#     ]
+#   }
+# ]
+
+# NOT the old format:
+# "SessionStart": {
+#   "command": "bun",
+#   "args": [".claude/hooks/load-fin-core-config.ts"]
+# }
+```
+
+---
+
 ### SessionStart Hook Not Running
 
 **Problem**: Finance core context doesn't load on startup
@@ -551,33 +719,47 @@ claude
 ls -la .claude/hooks/load-fin-core-config.ts
 
 # Run hook manually to test
+npx tsx .claude/hooks/load-fin-core-config.ts
+# OR
 bun .claude/hooks/load-fin-core-config.ts
 
 # Should output PAI CORE CONTEXT message
 ```
 
-**Verify bun is installed**:
+**Verify tsx/bun is installed**:
 ```bash
+# Check tsx
+npx tsx --version
+
+# If missing tsx
+npm install -g tsx
+
 # Check bun version
 bun --version
 
-# If missing, install bun
+# If missing bun, install
 curl -fsSL https://bun.sh/install | bash
 
 # Re-run hook
-bun .claude/hooks/load-fin-core-config.ts
+npx tsx .claude/hooks/load-fin-core-config.ts
 ```
 
 **Check settings.json hook configuration**:
 ```bash
-# Verify hooks section
-cat .claude/settings.json | grep -A 5 SessionStart
+# Verify hooks section (new format)
+cat .claude/settings.json | grep -A 10 SessionStart
 
-# Should show:
-# "SessionStart": {
-#   "command": "bun",
-#   "args": [".claude/hooks/load-fin-core-config.ts"]
-# }
+# Should show (NEW FORMAT):
+# "SessionStart": [
+#   {
+#     "hooks": [
+#       {
+#         "type": "command",
+#         "command": "npx tsx $CLAUDE_PROJECT_DIR/.claude/hooks/load-fin-core-config.ts"
+#       }
+#     ]
+#   }
+# ]
 ```
 
 ---
@@ -1159,6 +1341,169 @@ source ~/.zshrc
 
 # Verify
 uv --version
+```
+
+---
+
+## Testing & Development
+
+### Test Suite Failing
+
+**Problem**: Tests fail when running test suite
+
+**Symptoms**:
+```bash
+bun test
+# Some tests failing
+```
+
+**Common test failures**:
+
+**1. Python tests failing**:
+```bash
+# Run Python tests separately
+uv run pytest tests/python/
+
+# If ModuleNotFoundError
+uv sync
+
+# If specific test fails
+uv run pytest tests/python/test_yaml_generation.py -v
+```
+
+**2. Onboarding tests failing**:
+```bash
+# Run onboarding tests
+bun test tests/onboarding/
+
+# Clean up test artifacts
+rm -rf .onboarding-state.json
+rm -rf .env.test
+
+# Re-run tests
+bun test tests/onboarding/
+```
+
+**3. Hook tests failing**:
+```bash
+# Run hook tests
+bun test .claude/hooks/tests/
+
+# Verify hooks are executable
+chmod +x .claude/hooks/*.ts
+chmod +x .claude/hooks/*.sh
+
+# Test hooks manually
+npx tsx .claude/hooks/load-fin-core-config.ts
+bun .claude/hooks/skill-activation-prompt.ts
+```
+
+---
+
+### Master Test Runner Issues
+
+**Problem**: Test runner script not working
+
+**Symptoms**:
+```bash
+./scripts/rbp/test-runner.sh
+# Error: Permission denied
+# OR
+# Tests fail to execute
+```
+
+**Solutions**:
+
+**Make test runner executable**:
+```bash
+# Add execute permission
+chmod +x scripts/rbp/test-runner.sh
+
+# Run test runner
+./scripts/rbp/test-runner.sh
+```
+
+**Run individual test suites**:
+```bash
+# If master runner fails, run tests individually
+
+# Python tests
+uv run pytest tests/python/
+
+# Onboarding tests
+bun test tests/onboarding/
+
+# Hook tests
+bun test .claude/hooks/tests/
+
+# Integration tests (if present)
+bun test tests/integration/
+```
+
+**Check test dependencies**:
+```bash
+# Verify pytest installed
+uv run pytest --version
+
+# Verify bun test works
+bun --version
+bun test --help
+
+# Reinstall dependencies if needed
+uv sync
+```
+
+---
+
+### close-with-proof.sh Script Issues
+
+**Problem**: Cannot close bead with test proof
+
+**Symptoms**:
+```bash
+./scripts/rbp/close-with-proof.sh family-office-v93.18.1
+# Error: Permission denied
+# OR
+# Error: bead not found
+```
+
+**Solutions**:
+
+**Make script executable**:
+```bash
+# Add execute permission
+chmod +x scripts/rbp/close-with-proof.sh
+
+# Verify executable
+ls -la scripts/rbp/close-with-proof.sh
+# Should show: -rwxr-xr-x
+
+# Run script
+./scripts/rbp/close-with-proof.sh <bead-id>
+```
+
+**Verify bead exists**:
+```bash
+# Check if bead is open
+bd show <bead-id>
+
+# List all open beads
+bd list --status=open
+
+# If bead doesn't exist, verify ID
+bd list | grep <partial-id>
+```
+
+**Run tests manually first**:
+```bash
+# Test before closing
+bun run test
+
+# If tests pass, then close
+./scripts/rbp/close-with-proof.sh <bead-id>
+
+# For UI tasks, add --playwright flag
+./scripts/rbp/close-with-proof.sh <bead-id> --playwright
 ```
 
 ---
