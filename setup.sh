@@ -203,7 +203,33 @@ else
 fi
 
 echo ""
-echo "Step 8: Running onboarding wizard..."
+echo "Step 8: Loading Finance Guru agent commands..."
+echo ""
+
+# Create ~/.claude/commands if it doesn't exist
+GLOBAL_COMMANDS_DIR="$HOME/.claude/commands"
+create_dir "$GLOBAL_COMMANDS_DIR"
+
+# Create symlink to Finance Guru agent commands
+FIN_GURU_COMMANDS="$PROJECT_ROOT/.claude/commands/fin-guru"
+GLOBAL_FIN_GURU_LINK="$GLOBAL_COMMANDS_DIR/fin-guru"
+
+if [ -d "$FIN_GURU_COMMANDS" ]; then
+    if [ -L "$GLOBAL_FIN_GURU_LINK" ]; then
+        echo -e "${YELLOW}Exists:${NC} Finance Guru commands symlink"
+    elif [ -d "$GLOBAL_FIN_GURU_LINK" ]; then
+        echo -e "${YELLOW}Warning:${NC} $GLOBAL_FIN_GURU_LINK exists but is not a symlink"
+        echo "Skipping symlink creation (manual cleanup needed)"
+    else
+        ln -s "$FIN_GURU_COMMANDS" "$GLOBAL_FIN_GURU_LINK"
+        echo -e "${GREEN}Linked:${NC} Finance Guru agent commands → ~/.claude/commands/fin-guru"
+    fi
+else
+    echo -e "${YELLOW}Warning:${NC} Finance Guru commands not found at $FIN_GURU_COMMANDS"
+fi
+
+echo ""
+echo "Step 9: Running onboarding wizard..."
 echo ""
 
 # Check if bun is installed
