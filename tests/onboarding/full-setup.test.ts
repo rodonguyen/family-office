@@ -319,3 +319,262 @@ describe("State Persistence", () => {
     }
   });
 });
+
+describe("Full Setup Flow Integration", () => {
+  const defaultStatePath = join(PROJECT_ROOT, ".onboarding-state.json");
+
+  beforeEach(() => {
+    // Clean up any existing state
+    if (existsSync(defaultStatePath)) {
+      rmSync(defaultStatePath, { force: true });
+    }
+  });
+
+  afterEach(() => {
+    // Clean up test state
+    if (existsSync(defaultStatePath)) {
+      rmSync(defaultStatePath, { force: true });
+    }
+  });
+
+  test("complete onboarding flow: all sections in sequence", async () => {
+    const {
+      createNewState,
+      saveState,
+      loadState,
+      markSectionComplete,
+      saveSectionData,
+      isComplete,
+      getNextSection
+    } = await import("../../scripts/onboarding/modules/progress");
+
+    // 1. Start fresh onboarding
+    let state = createNewState();
+    expect(state.completed_sections).toEqual([]);
+    expect(state.current_section).toBeNull();
+    expect(isComplete(state)).toBe(false);
+
+    saveState(state);
+    expect(existsSync(defaultStatePath)).toBe(true);
+
+    // 2. Complete liquid_assets section
+    const liquidAssetsData = {
+      total: 50000,
+      accounts_count: 3,
+      average_yield: 0.045,
+      structure: ["2 business accounts", "1 high-yield savings"]
+    };
+
+    saveSectionData(state, "liquid_assets", liquidAssetsData);
+    markSectionComplete(state, "liquid_assets", "investments");
+    saveState(state);
+
+    // Verify state was updated
+    state = loadState()!;
+    expect(state.completed_sections).toContain("liquid_assets");
+    expect(state.current_section).toBe("investments");
+    expect(state.data.liquid_assets).toEqual(liquidAssetsData);
+
+    // 3. Complete investments section
+    const investmentsData = {
+      portfolio_value: 250000,
+      brokerage: "Fidelity",
+      holdings_count: 12,
+      asset_allocation: {
+        growth: 0.4,
+        income: 0.3,
+        hedge: 0.2,
+        googl: 0.1
+      }
+    };
+
+    saveSectionData(state, "investments", investmentsData);
+    markSectionComplete(state, "investments", "cash_flow");
+    saveState(state);
+
+    state = loadState()!;
+    expect(state.completed_sections).toContain("investments");
+    expect(state.current_section).toBe("cash_flow");
+
+    // 4. Complete cash_flow section
+    const cashFlowData = {
+      monthly_income: 15000,
+      monthly_expenses: 8000,
+      income_sources: ["W2 salary", "Consulting income"],
+      expense_categories: ["Housing", "Business expenses", "Personal"]
+    };
+
+    saveSectionData(state, "cash_flow", cashFlowData);
+    markSectionComplete(state, "cash_flow", "debt");
+    saveState(state);
+
+    state = loadState()!;
+    expect(state.completed_sections).toContain("cash_flow");
+    expect(state.current_section).toBe("debt");
+
+    // 5. Complete debt section
+    const debtData = {
+      total_debt: 50000,
+      margin_balance: 50000,
+      margin_rate: 0.1375,
+      other_debt: []
+    };
+
+    saveSectionData(state, "debt", debtData);
+    markSectionComplete(state, "debt", "preferences");
+    saveState(state);
+
+    state = loadState()!;
+    expect(state.completed_sections).toContain("debt");
+    expect(state.current_section).toBe("preferences");
+
+    // 6. Complete preferences section
+    const preferencesData = {
+      risk_tolerance: "moderate",
+      investment_style: "value",
+      time_horizon: "10+ years",
+      special_considerations: ["Tax efficiency", "Dividend growth"]
+    };
+
+    saveSectionData(state, "preferences", preferencesData);
+    markSectionComplete(state, "preferences", "summary");
+    saveState(state);
+
+    state = loadState()!;
+    expect(state.completed_sections).toContain("preferences");
+    expect(state.current_section).toBe("summary");
+
+    // 7. Complete summary section
+    const summaryData = {
+      confirmed: true,
+      timestamp: new Date().toISOString()
+    };
+
+    saveSectionData(state, "summary", summaryData);
+    markSectionComplete(state, "summary", "mcp_config");
+    saveState(state);
+
+    state = loadState()!;
+    expect(state.completed_sections).toContain("summary");
+    expect(state.current_section).toBe("mcp_config");
+
+    // 8. Complete mcp_config section (mock)
+    const mcpConfigData = {
+      configured_servers: ["exa", "gdrive", "perplexity"],
+      config_path: "~/.claude/mcp.json"
+    };
+
+    saveSectionData(state, "mcp_config", mcpConfigData);
+    markSectionComplete(state, "mcp_config", "env_setup");
+    saveState(state);
+
+    state = loadState()!;
+    expect(state.completed_sections).toContain("mcp_config");
+    expect(state.current_section).toBe("env_setup");
+
+    // 9. Complete env_setup section (final)
+    const envSetupData = {
+      env_file_created: true,
+      api_keys_configured: ["ANTHROPIC_API_KEY", "PERPLEXITY_API_KEY"]
+    };
+
+    saveSectionData(state, "env_setup", envSetupData);
+    markSectionComplete(state, "env_setup", null);
+    saveState(state);
+
+    // 10. Verify completion
+    state = loadState()!;
+    expect(state.completed_sections).toHaveLength(8);
+    expect(state.completed_sections).toEqual([
+      "liquid_assets",
+      "investments",
+      "cash_flow",
+      "debt",
+      "preferences",
+      "summary",
+      "mcp_config",
+      "env_setup"
+    ]);
+    expect(state.current_section).toBeNull();
+    expect(isComplete(state)).toBe(true);
+    expect(getNextSection(state)).toBeNull();
+
+    // Verify all data was preserved
+    expect(state.data.liquid_assets).toEqual(liquidAssetsData);
+    expect(state.data.investments).toEqual(investmentsData);
+    expect(state.data.cash_flow).toEqual(cashFlowData);
+    expect(state.data.debt).toEqual(debtData);
+    expect(state.data.preferences).toEqual(preferencesData);
+    expect(state.data.summary).toEqual(summaryData);
+    expect(state.data.mcp_config).toEqual(mcpConfigData);
+    expect(state.data.env_setup).toEqual(envSetupData);
+  });
+
+  test("state persistence across save/load cycles during flow", async () => {
+    const {
+      createNewState,
+      saveState,
+      loadState,
+      markSectionComplete,
+      saveSectionData
+    } = await import("../../scripts/onboarding/modules/progress");
+
+    // Simulate a multi-session onboarding (save/load between each section)
+    let state = createNewState();
+    saveState(state);
+
+    // Session 1: Liquid assets
+    state = loadState()!;
+    saveSectionData(state, "liquid_assets", { total: 10000 });
+    markSectionComplete(state, "liquid_assets", "investments");
+    saveState(state);
+
+    // Session 2: Investments
+    state = loadState()!;
+    expect(state.completed_sections).toContain("liquid_assets");
+    expect(state.data.liquid_assets.total).toBe(10000);
+    saveSectionData(state, "investments", { portfolio_value: 100000 });
+    markSectionComplete(state, "investments", "cash_flow");
+    saveState(state);
+
+    // Session 3: Verify both previous sections are preserved
+    state = loadState()!;
+    expect(state.completed_sections).toContain("liquid_assets");
+    expect(state.completed_sections).toContain("investments");
+    expect(state.data.liquid_assets.total).toBe(10000);
+    expect(state.data.investments.portfolio_value).toBe(100000);
+    expect(state.current_section).toBe("cash_flow");
+  });
+
+  test("getNextSection returns correct section in sequence", async () => {
+    const {
+      createNewState,
+      getNextSection,
+      markSectionComplete
+    } = await import("../../scripts/onboarding/modules/progress");
+
+    const state = createNewState();
+
+    // At start, should return liquid_assets
+    expect(getNextSection(state)).toBe("liquid_assets");
+
+    // After completing liquid_assets, should return investments
+    markSectionComplete(state, "liquid_assets", "investments");
+    expect(getNextSection(state)).toBe("investments");
+
+    // After completing investments, should return cash_flow
+    markSectionComplete(state, "investments", "cash_flow");
+    expect(getNextSection(state)).toBe("cash_flow");
+
+    // Complete remaining sections
+    markSectionComplete(state, "cash_flow", "debt");
+    markSectionComplete(state, "debt", "preferences");
+    markSectionComplete(state, "preferences", "summary");
+    markSectionComplete(state, "summary", "mcp_config");
+    markSectionComplete(state, "mcp_config", "env_setup");
+    markSectionComplete(state, "env_setup", null);
+
+    // After all sections complete, should return null
+    expect(getNextSection(state)).toBeNull();
+  });
+});
