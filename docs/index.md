@@ -9,6 +9,8 @@ Welcome to the Finance Guru documentation. This hub provides navigation to all t
 | [README](../README.md) | Project overview, quick start, architecture |
 | [Setup Guide](SETUP.md) | **Complete installation and configuration guide** |
 | [API Keys Guide](api-keys.md) | **How to obtain and configure API keys** |
+| [Required CSV Uploads](required-csv-uploads.md) | **Complete guide to broker CSV formats and upload workflow** |
+| [Broker CSV Export Guide](broker-csv-export-guide.md) | **How to export CSVs from Fidelity, Schwab, Vanguard, etc.** |
 | [Troubleshooting](TROUBLESHOOTING.md) | **Comprehensive troubleshooting guide** |
 | [API Reference](api.md) | CLI tools documentation |
 | [Hooks System](hooks.md) | How hooks power auto-activation |
