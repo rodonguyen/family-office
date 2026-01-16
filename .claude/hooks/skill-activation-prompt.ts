@@ -1,6 +1,21 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
+
+/**
+ * Skill Activation Prompt Hook
+ * User Prompt Submit Hook
+ *
+ * Analyzes user prompts to detect when domain-specific skills should be activated.
+ * Reads skill-rules.json and checks for keyword/intent pattern matches.
+ * Outputs warnings/suggestions before Claude responds.
+ *
+ * Refactored to use Bun runtime for improved performance.
+ */
+
 import { readFileSync } from 'fs';
-import { join } from 'path';
+import { join, resolve } from 'path';
+
+// Bun provides __dirname directly
+const __dirname = import.meta.dir;
 
 interface HookInput {
     session_id: string;
@@ -33,16 +48,54 @@ interface MatchedSkill {
     config: SkillRule;
 }
 
-async function main() {
+function getProjectRoot(): string {
+    // Hook is in family-office/.claude/hooks/
+    // Project root is family-office/
+    return resolve(__dirname, '../..');
+}
+
+function main() {
+    // Read stdin (prompt submission info)
+    let inputData = '';
+    process.stdin.setEncoding('utf-8');
+
+    // Handle both piped and direct execution
+    if (process.stdin.isTTY) {
+        // Direct execution (testing) - use dummy input
+        inputData = JSON.stringify({
+            session_id: 'test',
+            transcript_path: '/tmp/transcript.txt',
+            cwd: getProjectRoot(),
+            permission_mode: 'normal',
+            prompt: 'test prompt'
+        });
+        processHook(inputData);
+    } else {
+        // Piped input from Claude Code
+        process.stdin.on('data', chunk => {
+            inputData += chunk;
+        });
+
+        process.stdin.on('end', () => {
+            processHook(inputData);
+        });
+    }
+}
+
+function processHook(inputData: string) {
     try {
+        // Check for empty input
+        if (!inputData || inputData.trim() === '') {
+            process.exit(0);
+        }
+
         // Read input from stdin
-        const input = readFileSync(0, 'utf-8');
-        const data: HookInput = JSON.parse(input);
+        const data: HookInput = JSON.parse(inputData);
         const prompt = data.prompt.toLowerCase();
 
         // Load skill rules
-        const projectDir = data.cwd || process.env.CLAUDE_PROJECT_DIR || process.cwd();
-        const rulesPath = join(projectDir, '.claude', 'skills', 'skill-rules.json');
+        const projectRoot = data.cwd || process.env.CLAUDE_PROJECT_DIR || getProjectRoot();
+        const rulesPath = join(projectRoot, '.claude', 'skills', 'skill-rules.json');
         const rules: SkillRules = JSON.parse(readFileSync(rulesPath, 'utf-8'));
 
         const matchedSkills: MatchedSkill[] = [];
@@ -126,7 +179,4 @@ async function main() {
     }
 }
 
-main().catch(err => {
-    console.error('Uncaught error:', err);
-    process.exit(1);
-});
+main();
