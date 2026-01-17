@@ -72,7 +72,7 @@ All outputs saved to `fin-guru-private/fin-guru/analysis/`:
 
 ## Configuration
 
-Simulation parameters are set in `src/strategies/dividend_margin_monte_carlo.py`:
+Simulation parameters are set in `fin-guru-private/strategies/dividend_margin_monte_carlo.py`:
 - Starting portfolio values (auto-detected or manual)
 - Monthly deployment amounts
 - Bucket allocations and yields

@@ -222,23 +222,9 @@ Finance Guru is designed to be **forked** and used privately. Here's how it work
 
 ### Architecture for Privacy
 
-```
-┌─────────────────────────────────────────┐
-│  Public Repository (GitHub)             │
-│  ✓ Tools, agents, templates             │
-│  ✓ Documentation                         │
-│  ✓ Sample configs                        │
-│  ✗ NO personal financial data            │
-└─────────────────────────────────────────┘
-           ↓ Fork & Clone
-┌─────────────────────────────────────────┐
-│  Your Local Fork                         │
-│  ✓ All public features                   │
-│  ✓ Your onboarding-generated configs     │
-│  ✓ Your portfolio data (gitignored)      │
-│  ✓ Your API keys (.env, gitignored)      │
-└─────────────────────────────────────────┘
-```
+<p align="center">
+  <img src="assets/fork-model.png" alt="Finance Guru Fork Model" width="100%">
+</p>
 
 ### How to Use
 

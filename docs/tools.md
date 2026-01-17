@@ -55,10 +55,10 @@
 - **Features**: Position limits, $500k allocation guidance, efficient frontier
 - **Usage**: See "Portfolio Optimization" section above
 
-#### Coming Soon (Build List 2025-10-13)
-- Options Analytics (`src/analysis/options.py`)
-- Factor Analysis (`src/analysis/factors.py`)
-- Technical Screener (`src/utils/screener.py`)
-- Data Validator (`src/utils/data_validator.py`)
+#### Additional Tools (✅ Implemented)
+- **Options Analytics** (`src/analysis/options_cli.py`) - Black-Scholes pricing, Greeks, IV analysis
+- **Factor Analysis** (`src/analysis/factors_cli.py`) - CAPM, Alpha, Beta calculations
+- **Technical Screener** (`src/utils/screener_cli.py`) - Pattern detection, technical signals
+- **Data Validator** (`src/utils/data_validator_cli.py`) - Data quality checks, outlier detection
 
-**Build Plan**: `notebooks/tools-needed/Build-List-2025-10-13.md`
+See `docs/api.md` for CLI usage examples.

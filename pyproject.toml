@@ -21,6 +21,7 @@ dependencies = [
     "scipy>=1.16.2",
     "streamlit>=1.50.0",
     "textual>=6.6.0",
+    "urllib3>=2.6.3",
     "xlsxwriter>=3.2.9",
     "yfinance>=0.2.66",
 ]
